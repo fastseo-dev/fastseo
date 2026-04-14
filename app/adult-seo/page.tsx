@@ -1,36 +1,76 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
+import ServicePage from "@/components/ServicePage";
 
 export const metadata: Metadata = {
-  title: 'Adult SEO Agency',
-  description: "Compliant adult SEO services. We rank adult brands where other agencies won't operate.",
-  alternates: {
-    canonical: 'https://www.fastseosolutions.com/adult-seo/',
-  },
+  title: "Adult SEO Agency — SEO for Adult Websites & Escort Services",
+  description:
+    "Specialist adult SEO for adult websites, escorts and adult content platforms. Increase organic traffic and rankings with a proven SEO strategy.",
+  alternates: { canonical: "https://www.fastseosolutions.com/adult-seo/" },
 };
+
+const features = [
+  {
+    title: "Competitors Audit",
+    desc: "We run an intense analysis of your direct competitors to find insights, weaknesses and opportunity gaps specific to the adult industry.",
+  },
+  {
+    title: "On-Page Optimisation",
+    desc: "We create, edit, update and make recommendations for your website pages to focus on increasing qualified traffic and improving your rankings.",
+  },
+  {
+    title: "Adult Link Building",
+    desc: "We create and execute an adult link building strategy, building your website authority from relevant sources within the adult space.",
+  },
+  {
+    title: "Keywords Audit",
+    desc: "We identify the highest-value keywords in your specific adult niche — balancing search volume, competition, and commercial intent.",
+  },
+  {
+    title: "Technical SEO",
+    desc: "We ensure the architecture and structure of your adult website follows all search engine guidelines for maximum crawlability and indexing.",
+  },
+  {
+    title: "Monthly Reports",
+    desc: "We send monthly reports tracking changes in ranking, incoming links and ROI so you can follow the full impact of our adult SEO strategy.",
+  },
+];
 
 export default function AdultSeoPage() {
   return (
-    <div className="min-h-screen bg-void pt-[70px]">
-      <div className="max-w-[1160px] mx-auto px-6 py-24">
-        <span className="inline-flex items-center gap-2 text-lime font-body font-semibold text-[11px] tracking-[0.12em] uppercase mb-4">
-          <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
-          FastSEO
-        </span>
-        <h1 className="font-display font-black text-[56px] leading-[1.05] tracking-[-1.5px] text-text-primary mb-6">
-          Adult SEO Agency
-        </h1>
-        <p className="font-body text-[17px] text-text-muted max-w-[600px] leading-relaxed">
-          Compliant adult SEO services. We rank adult brands where other agencies won't operate.
-        </p>
-        <div className="mt-8">
-          <a
-            href="/contact/"
-            className="inline-flex items-center bg-lime text-void font-display font-bold text-[15px] px-7 py-3.5 rounded-lg hover:bg-[#F0FF6B] transition-colors"
-          >
-            Get Free Audit
-          </a>
-        </div>
-      </div>
-    </div>
+    <ServicePage
+      label="Adult SEO"
+      title="Adult SEO Agency"
+      subtitle="Our adult SEO service has helped develop marketing strategies across multiple sectors of the adult industry. We attract more traffic to your site and provide more enquiries — taking your business to new heights."
+      features={features}
+    >
+      <h2>SEO for Adult Websites</h2>
+      <p>
+        The need for an efficient adult SEO service has never been greater. Competition for
+        keywords in the adult space is intense, mainstream advertising is largely unavailable,
+        and the platforms willing to work with adult content are limited — making organic
+        search the primary acquisition channel.
+      </p>
+      <p>
+        FastSEO has worked with adult content platforms, escort agencies, adult toy retailers,
+        and webcam model sites. We understand the nuances of adult SEO — from age verification
+        requirements to the specific link sources that move rankings in this niche.
+      </p>
+      <h3>What Sets FastSEO Apart</h3>
+      <p>
+        Most SEO agencies refuse to work with adult clients. We specialise in it. Our team
+        has years of experience navigating the unique challenges of adult SEO — including
+        restricted advertising, cautious link partners, and content guidelines — to deliver
+        consistent organic growth.
+      </p>
+      <h3>Our Adult SEO Process</h3>
+      <ul>
+        <li>In-depth competitive analysis across adult verticals</li>
+        <li>Technical SEO audit and on-page optimisation</li>
+        <li>Adult-specific keyword research and content strategy</li>
+        <li>Link building from authoritative adult and adjacent sites</li>
+        <li>Content creation tailored to your specific adult niche</li>
+        <li>Monthly performance reports with full transparency</li>
+      </ul>
+    </ServicePage>
   );
 }
