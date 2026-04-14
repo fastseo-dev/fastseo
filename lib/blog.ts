@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { remark } from "remark";
+import remarkGfm from "remark-gfm";
+import remarkHtml from "remark-html";
 
 const POSTS_DIR = path.join(process.cwd(), "content/blog");
 
@@ -25,6 +28,7 @@ export interface PostMeta {
 
 export interface Post extends PostMeta {
   content: string;
+  contentHtml: string;
 }
 
 export function getAllPosts(): PostMeta[] {
@@ -63,12 +67,17 @@ export function getAllPosts(): PostMeta[] {
     );
 }
 
-export function getPost(slug: string): Post | null {
+export async function getPost(slug: string): Promise<Post | null> {
   const filePath = path.join(POSTS_DIR, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return null;
 
   const raw = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
+
+  const processed = await remark()
+    .use(remarkGfm)
+    .use(remarkHtml, { sanitize: false })
+    .process(content);
 
   return {
     title: (data.title as string) ?? "",
@@ -78,6 +87,7 @@ export function getPost(slug: string): Post | null {
     categories: (data.categories as string[]) ?? [],
     excerpt: "",
     content,
+    contentHtml: processed.toString(),
   };
 }
 

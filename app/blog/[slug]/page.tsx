@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPost, formatDate } from "@/lib/blog";
 
 interface Props {
@@ -14,7 +13,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPost(slug);
   if (!post) return {};
   return {
     title: post.title,
@@ -27,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPost(slug);
   if (!post) notFound();
 
   return (
@@ -82,10 +81,11 @@ export default async function BlogPostPage({ params }: Props) {
           </span>
         </div>
 
-        {/* MDX content */}
-        <div className="prose">
-          <MDXRemote source={post.content} />
-        </div>
+        {/* Post content */}
+        <div
+          className="prose"
+          dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+        />
 
         {/* Footer CTA */}
         <div className="mt-16 pt-10 border-t border-border">
