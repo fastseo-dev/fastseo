@@ -2,36 +2,63 @@ import type { Metadata } from "next";
 import ServicePage from "@/components/ServicePage";
 
 export const metadata: Metadata = {
-  title: "Cryptocurrency SEO Agency — Blockchain & Crypto SEO Services",
+  title: "Cryptocurrency SEO Agency — Blockchain, DeFi & Crypto SEO Services",
   description:
-    "Specialist cryptocurrency SEO for blockchain, DeFi, NFT and crypto exchange websites. Rank higher and drive qualified organic traffic to your crypto business.",
+    "Specialist cryptocurrency SEO for exchanges, DeFi protocols, NFT platforms and blockchain businesses. Rank on Google and get cited by ChatGPT and Perplexity. Free audit.",
   alternates: { canonical: "https://www.fastseosolutions.com/cryptocurrency-seo/" },
 };
 
 const features = [
   {
-    title: "Crypto Keywords Audit",
-    desc: "We do unparalleled research to find the most relevant keywords suitable for your cryptocurrency business — terms your target audience is actively searching.",
+    title: "Crypto Keyword Research",
+    desc: "Comprehensive keyword mapping across exchange, DeFi, NFT, and Web3 terms — prioritised by search intent, volume, and competitive difficulty.",
   },
   {
-    title: "Website Structure",
-    desc: "We design, edit, update, and make suggestions for your website pages to enhance organic traffic and improve search engine rankings.",
+    title: "Technical SEO Audit",
+    desc: "Full crawl, Core Web Vitals, site architecture, indexation, and schema markup review — the technical foundation every crypto site needs to rank.",
   },
   {
-    title: "Competitors Audit",
-    desc: "We provide an in-depth analysis of your direct competitors to discover shortcomings, opportunity gaps, and actionable insights for your business.",
+    title: "Competitors Gap Analysis",
+    desc: "In-depth analysis of ranking competitors to surface content gaps, backlink opportunities, and keyword clusters you are not yet capturing.",
   },
   {
     title: "Crypto Link Building",
-    desc: "We plan and implement a cryptocurrency link building strategy that boosts your popularity and develops your website authority for better SERP results.",
+    desc: "High-DA backlinks from crypto news, finance, and Web3 publications. Manual outreach, niche edits, and digital PR — no PBNs or spam.",
   },
   {
-    title: "Content Optimisation",
-    desc: "We produce valuable and relevant cryptocurrency content — guides, reviews, walkthroughs — that ranks in search and builds topical authority.",
+    title: "E-E-A-T Content Strategy",
+    desc: "YMYL-compliant content that builds topical authority across your crypto niche — guides, market analyses, comparison pages, and educational resources.",
   },
   {
-    title: "Community Building",
-    desc: "We help you establish your online community by engaging investors on social media, forums, Discord, and other digital platforms.",
+    title: "AEO for Crypto Brands",
+    desc: "Optimise your brand to be cited and recommended by ChatGPT, Gemini, and Perplexity — the emerging search channels your competitors are ignoring.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Why is SEO so important for cryptocurrency businesses?",
+    a: "Most major advertising platforms — Google Ads, Meta, Twitter/X — restrict or outright prohibit paid crypto advertising. Organic search is therefore the only consistent, scalable acquisition channel available to most crypto businesses. A strong SEO presence compounds over time and cannot be switched off overnight like paid campaigns.",
+  },
+  {
+    q: "Can you rank for competitive keywords like 'crypto exchange' or 'best DeFi platform'?",
+    a: "Yes — through sustained topical authority building, high-quality link acquisition from authoritative finance and crypto publications, and well-structured content targeting the full keyword funnel. We prioritise achievable mid-tail and long-tail terms first to build domain authority, then target the highest-competition head terms.",
+  },
+  {
+    q: "Do you work with NFT projects, DeFi protocols, and Web3 companies?",
+    a: "Yes. We work across the full crypto and blockchain spectrum — exchanges, DeFi protocols, NFT marketplaces, crypto news sites, wallet providers, blockchain infrastructure companies, Web3 SaaS platforms, and token projects.",
+  },
+  {
+    q: "How do you handle Google's YMYL guidelines for crypto content?",
+    a: "We build E-E-A-T signals into every content piece — citing credible primary sources, featuring verifiable author credentials, structuring content with clear expertise signals, and building the external authority (links, citations, brand mentions) that Google uses to assess trustworthiness for YMYL topics.",
+  },
+  {
+    q: "How long does cryptocurrency SEO take to show results?",
+    a: "Long-tail and informational content can rank within 6–10 weeks. Competitive transactional terms typically take 4–8 months for significant movement depending on domain authority and competition level. We set realistic milestones and report progress monthly from day one.",
+  },
+  {
+    q: "Can you get our crypto brand recommended by ChatGPT or Perplexity?",
+    a: "Yes. Our AEO (Answer Engine Optimisation) service is specifically designed to get brands cited and recommended by AI assistants including ChatGPT, Gemini, Perplexity, and Claude. This complements traditional SEO and is increasingly important as AI-powered search captures a growing share of queries.",
   },
 ];
 
@@ -40,37 +67,50 @@ export default function CryptocurrencySeoPage() {
     <ServicePage
       label="Crypto SEO"
       title="Cryptocurrency SEO Agency"
-      subtitle="Digital capital like cryptocurrency has become a significant part of the global economy. In a fiercely competitive landscape where paid advertising is restricted, organic SEO is your most powerful growth channel."
+      subtitle="Paid advertising for crypto is blocked on almost every major platform. Organic search is your only scalable growth channel — and we have built our practice around dominating it for blockchain, DeFi, NFT and exchange businesses."
       features={features}
+      faqs={faqs}
+      canonicalPath="/cryptocurrency-seo/"
+      serviceName="Cryptocurrency SEO"
+      serviceDescription="Specialist SEO for cryptocurrency exchanges, DeFi protocols, NFT platforms and blockchain businesses. We rank crypto brands on Google and help them get cited by AI assistants."
     >
       <h2>SEO for Cryptocurrency Websites</h2>
       <p>
-        Cryptocurrencies have become a major part of the global economy, with the industry
-        valued in the hundreds of billions. Despite strict regulations from several governments
-        and bans on paid promotion from major platforms, organic search remains wide open —
-        and it&apos;s where we operate.
+        The global cryptocurrency market is valued in the trillions — yet most crypto businesses
+        cannot run paid ads. Google, Meta, and Twitter/X all impose severe restrictions on crypto
+        advertising, making organic search the single most important digital marketing channel in
+        the industry. This is precisely where FastSEO operates.
       </p>
       <p>
-        FastSEO has worked with crypto exchanges, DeFi protocols, NFT platforms, and blockchain
-        infrastructure companies. We understand the regulatory environment, the audience, and
-        what it takes to rank in this highly competitive niche.
+        We have worked with crypto exchanges, DeFi protocols, NFT marketplaces, blockchain
+        infrastructure companies, and Web3 SaaS platforms. We understand the regulatory environment,
+        the E-E-A-T requirements for YMYL crypto content, and the specific link acquisition
+        strategies that move rankings in this niche.
       </p>
       <h3>Why Crypto SEO Requires Specialists</h3>
       <p>
-        Many social media platforms ban crypto advertising outright. This makes organic search
-        not just important — it&apos;s often the only scalable digital acquisition channel.
-        Cracking cryptocurrency SEO is challenging, but our team has done it repeatedly across
-        multiple markets and languages.
+        Cryptocurrency content is classified as YMYL (Your Money Your Life) by Google, meaning it
+        is held to a higher standard for expertise, experience, authoritativeness, and
+        trustworthiness. Generic SEO practices fall short. You need content built on verifiable
+        expertise, backed by links from authoritative financial and crypto publications, and
+        structured to meet Google's exacting quality signals.
       </p>
-      <h3>Our Cryptocurrency SEO Services</h3>
+      <h3>Our Cryptocurrency SEO Process</h3>
       <ul>
-        <li>On-page SEO for blockchain and crypto websites</li>
-        <li>High-quality link building from crypto-relevant authoritative sources</li>
-        <li>Cryptocurrency content writing optimised for search</li>
-        <li>Technical SEO audits and Core Web Vitals optimisation</li>
-        <li>Topical authority building across crypto, DeFi, NFT, and Web3 keywords</li>
-        <li>Regular reporting on rankings, traffic, and ROI</li>
+        <li>Technical SEO audit and site architecture optimisation</li>
+        <li>Keyword research across exchange, DeFi, NFT, wallet, and Web3 verticals</li>
+        <li>E-E-A-T content strategy — guides, tutorials, market analysis, comparison pages</li>
+        <li>Link building from authoritative crypto news, finance, and Web3 publications</li>
+        <li>AEO optimisation to capture AI assistant citations (ChatGPT, Gemini, Perplexity)</li>
+        <li>Monthly rank tracking and traffic reporting with ROI attribution</li>
       </ul>
+      <h3>Who We Work With</h3>
+      <p>
+        Cryptocurrency exchanges, DeFi protocols, NFT platforms, blockchain infrastructure
+        providers, crypto wallets, Web3 SaaS companies, token projects, and crypto news
+        publications. Whether you are a startup building from zero or an established exchange
+        scaling to new markets, we can build the organic strategy to get you there.
+      </p>
     </ServicePage>
   );
 }

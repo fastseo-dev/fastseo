@@ -2,36 +2,63 @@ import type { Metadata } from "next";
 import ServicePage from "@/components/ServicePage";
 
 export const metadata: Metadata = {
-  title: "Cannabis & Marijuana SEO Agency — CBD & Hemp SEO Services",
+  title: "Cannabis SEO Agency — Marijuana, CBD & Dispensary SEO Services",
   description:
-    "Specialist SEO for cannabis, marijuana, CBD and hemp businesses. Reach the top of search results for recreational drug and dispensary keywords.",
+    "Specialist cannabis SEO for dispensaries, CBD brands, marijuana businesses and hemp companies. Rank at the top of Google for cannabis keywords. Free SEO audit.",
   alternates: { canonical: "https://www.fastseosolutions.com/marijuana-seo/" },
 };
 
 const features = [
   {
-    title: "Competitors Audit",
-    desc: "Before we start, our research team digs deep into your business profile, competitors, and opportunity gaps — devising a plan based on real market data.",
+    title: "Cannabis Competitors Audit",
+    desc: "In-depth research into your direct competitors — their keyword rankings, backlink profiles, content gaps, and the opportunity windows your cannabis business can exploit.",
   },
   {
-    title: "Website Optimisation",
-    desc: "We build a fully optimised cannabis website with all the interactive elements in place, crafted to rank and retain visitors.",
+    title: "Cannabis Website Optimisation",
+    desc: "Full technical and on-page SEO for your cannabis website — from site architecture and page speed to title tags, meta descriptions, and product page optimisation.",
   },
   {
-    title: "Cannabis Keywords",
-    desc: "We employ a thorough research process counting all factors — keyword density, volume, and reach — to ensure your content hits the right notes.",
+    title: "Cannabis Keyword Research",
+    desc: "Comprehensive keyword mapping across dispensary, CBD, THC, hemp, and strain-specific terms — balancing search volume, competition, and buyer intent.",
   },
   {
     title: "Cannabis Link Building",
-    desc: "Link building for cannabis companies must be strategic and well-planned. With our experience, we make it a major stepping stone for your success.",
+    desc: "Strategic backlinks from cannabis publications, lifestyle sites, wellness domains, and hemp industry directories — built with a specialist network most agencies cannot access.",
   },
   {
-    title: "Cannabis Content",
-    desc: "Our experienced content writing team delivers well-researched, keyword-rich content for on-page and guest posts targeting your specific cannabis niche.",
+    title: "Cannabis Content Creation",
+    desc: "Expertly written, keyword-rich content for product pages, strain guides, educational resources, and blog posts — the topical authority that drives cannabis rankings.",
   },
   {
-    title: "Community Management",
-    desc: "We keep track of every mention across Facebook, Twitter, and forums — keeping your online image untarnished in the cannabis space.",
+    title: "Brand & Reputation Management",
+    desc: "Social monitoring, review management, and community engagement across cannabis forums, Facebook groups, and social platforms to protect and grow your brand presence.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Can Google actually rank cannabis and marijuana websites?",
+    a: "Yes. Google freely indexes and ranks cannabis content. Unlike paid advertising platforms (Google Ads, Meta), there is no restriction on organic search results for legally operating cannabis businesses. This makes SEO the single most important digital marketing channel for the cannabis industry.",
+  },
+  {
+    q: "Is cannabis SEO legal?",
+    a: "SEO for legally operating cannabis businesses is entirely legal. We work with dispensaries, CBD e-commerce brands, hemp companies, and cannabis information publishers in jurisdictions where they operate within applicable law.",
+  },
+  {
+    q: "Do you work with CBD and hemp businesses as well as THC dispensaries?",
+    a: "Yes. We work across the full plant spectrum — THC dispensaries, CBD e-commerce, hemp brands, cannabis SaaS platforms, and cannabis information publishers. Each segment has distinct keyword patterns and content requirements that we tailor strategy to.",
+  },
+  {
+    q: "What keywords should a cannabis dispensary target?",
+    a: "Location-specific service keywords ('dispensary near me', 'cannabis shop [city]'), product category terms (edibles, vapes, flower, pre-rolls), strain-specific keywords, and educational content about effects and legislation. We build a full keyword map tailored to your product range, location, and business goals.",
+  },
+  {
+    q: "How do you build backlinks for cannabis websites?",
+    a: "Through outreach to cannabis publications, lifestyle and wellness sites, hemp industry directories, legal cannabis news sites, and relevant mainstream media. Cannabis link building requires a specialised network — many standard link sources refuse to work with cannabis content. We have built that network over years in the niche.",
+  },
+  {
+    q: "How long does cannabis SEO take to show results?",
+    a: "Local dispensary keywords and long-tail CBD terms typically see movement within 3–5 months. Competitive national terms for established keywords can take 6–12 months. New domains with no history take longer to establish authority — our content and link strategy is designed to accelerate that curve as much as possible.",
   },
 ];
 
@@ -40,37 +67,43 @@ export default function MarijuanaSeoPage() {
     <ServicePage
       label="Cannabis SEO"
       title="Cannabis & Marijuana SEO"
-      subtitle="If your cannabis or CBD business isn't on the first page of Google, you've lost the sale before it started. We rank marijuana, CBD, hemp, and cannabis businesses at the top — consistently."
+      subtitle="Paid advertising for cannabis is blocked almost everywhere. Google organic is your most powerful, most sustainable customer acquisition channel — and we have spent years cracking it for dispensaries, CBD brands, and cannabis businesses."
       features={features}
+      faqs={faqs}
+      canonicalPath="/marijuana-seo/"
+      serviceName="Cannabis SEO"
+      serviceDescription="Specialist cannabis SEO for dispensaries, CBD brands, marijuana businesses and hemp companies. We rank cannabis websites at the top of Google for their most valuable keywords."
     >
-      <h2>SEO for Cannabis & Marijuana Websites</h2>
+      <h2>SEO for Cannabis &amp; Marijuana Businesses</h2>
       <p>
-        Marijuana, CBD, hemp, and cannabis are different spheres where ranking online
-        requires domain expertise. Paid advertising is heavily restricted in this space,
-        making organic search the primary — and often the only — scalable customer
-        acquisition channel.
+        Marijuana, CBD, hemp, and cannabis operate in one of the most restricted digital marketing
+        environments of any legal industry. Paid advertising is blocked on Google, Meta, and most
+        major platforms. This forces every cannabis brand — from local dispensaries to national
+        CBD e-commerce sites — to compete entirely in organic search.
       </p>
       <p>
-        FastSEO has cracked the formula for ranking cannabis businesses consistently at
-        the top of search results. Over years of association with industry leaders in the
-        recreational cannabis space, we have built the knowledge and network to deliver
-        results others can&apos;t.
+        FastSEO has spent years building the expertise, content knowledge, and link network
+        required to rank cannabis businesses consistently at the top of their target keywords.
+        We work with dispensaries, CBD brands, hemp companies, cannabis SaaS platforms, and
+        cannabis content publishers — across the UK, US, Europe, Canada, and Australia.
       </p>
-      <h3>Why Cannabis SEO Requires a Specialist</h3>
+      <h3>Why Cannabis SEO Needs a Specialist</h3>
       <p>
-        Standard SEO agencies lack the experience — and often the willingness — to work
-        in the cannabis space. Keyword targeting requires nuance; link building requires
-        a specific network; and content must navigate a careful balance between commercial
-        and informational intent. We have done this for years.
+        Standard SEO agencies lack the willingness and the knowledge to work in cannabis.
+        Keyword targeting requires nuance — navigating terms that Google treats cautiously
+        versus those it ranks freely. Link building requires a specific network of publishers
+        willing to work with cannabis content. And content must navigate a careful balance
+        between commercial copy and the educational substance Google rewards.
       </p>
-      <h3>Our Cannabis SEO Services</h3>
+      <h3>Our Cannabis SEO Process</h3>
       <ul>
-        <li>Cannabis-specific keyword research and content mapping</li>
-        <li>On-page SEO for dispensary, CBD, hemp, and marijuana websites</li>
-        <li>Strategic link building from relevant, high-authority sources</li>
-        <li>Technical SEO audit and site architecture optimisation</li>
-        <li>Content creation for blog, product pages, and educational resources</li>
-        <li>Community management and brand reputation monitoring</li>
+        <li>Cannabis-specific keyword research — local, national, and product-level</li>
+        <li>Technical SEO audit and site architecture review</li>
+        <li>Product page, category page, and strain guide optimisation</li>
+        <li>Strategic link building from cannabis, wellness, and lifestyle publications</li>
+        <li>Educational content strategy to build topical authority in your niche</li>
+        <li>Local SEO for dispensaries with Google Business Profile optimisation</li>
+        <li>Monthly performance reporting with clear ROI visibility</li>
       </ul>
     </ServicePage>
   );

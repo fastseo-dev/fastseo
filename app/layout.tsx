@@ -42,6 +42,44 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "FastSEO",
+  url: "https://www.fastseosolutions.com",
+  logo: "https://www.fastseosolutions.com/logo.png",
+  foundingDate: "2018",
+  description:
+    "Specialist SEO agency for iGaming, cryptocurrency, adult, cannabis, dental and SaaS industries.",
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "hello@fastseosolutions.com",
+    contactType: "customer service",
+    availableLanguage: "English",
+  },
+  sameAs: [
+    "https://www.linkedin.com/company/fastseosolutions",
+    "https://twitter.com/fastseosolutions",
+  ],
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "FastSEO",
+  url: "https://www.fastseosolutions.com",
+  description:
+    "Specialist SEO agency for iGaming, cryptocurrency, adult, cannabis, dental and SaaS industries.",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://www.fastseosolutions.com/blog/?s={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -53,6 +91,14 @@ export default function RootLayout({
       className={`${outfit.variable} ${spaceGrotesk.variable} h-full`}
     >
       <body className="min-h-full antialiased bg-void text-text-primary font-body">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
         <Navbar />
         <main>{children}</main>
         <Footer />
