@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
 const faqs = [
@@ -37,8 +34,6 @@ const faqs = [
 ];
 
 export default function FAQAccordion() {
-  const [open, setOpen] = useState<number | null>(null);
-
   return (
     <section className="section bg-void">
       <div className="max-w-[780px] mx-auto px-6">
@@ -51,36 +46,33 @@ export default function FAQAccordion() {
 
         <div className="flex flex-col gap-3">
           {faqs.map((faq, i) => (
-            <div
+            <details
               key={i}
-              className="bg-surface border border-border rounded-xl overflow-hidden"
+              className="group bg-surface border border-border rounded-xl overflow-hidden"
             >
-              <button
-                className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
-                onClick={() => setOpen(open === i ? null : i)}
-              >
-                <span className="font-display font-semibold text-[15px] text-text-primary">
+              <summary className="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer list-none">
+                <span className="font-display font-semibold text-[15px] text-text-primary group-open:text-lime transition-colors">
                   {faq.question}
                 </span>
-                <span
-                  className={`flex-shrink-0 w-5 h-5 rounded-full border border-border flex items-center justify-center transition-transform duration-200 ${
-                    open === i ? "rotate-45 border-lime" : ""
-                  }`}
-                >
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <line x1="5" y1="1" x2="5" y2="9" stroke={open === i ? "#E8FF47" : "#6B7280"} strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="1" y1="5" x2="9" y2="5" stroke={open === i ? "#E8FF47" : "#6B7280"} strokeWidth="1.5" strokeLinecap="round" />
+                <span className="shrink-0 w-5 h-5 rounded-full border border-border group-open:border-lime flex items-center justify-center transition-all duration-200">
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    className="transition-transform duration-200 group-open:rotate-45"
+                  >
+                    <line x1="5" y1="1" x2="5" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="group-open:stroke-[#E8FF47] stroke-[#6B7280]" />
+                    <line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="group-open:stroke-[#E8FF47] stroke-[#6B7280]" />
                   </svg>
                 </span>
-              </button>
-              {open === i && (
-                <div className="px-6 pb-5">
-                  <p className="font-body text-[14px] text-text-muted leading-relaxed border-t border-border-subtle pt-4">
-                    {faq.answer}
-                  </p>
-                </div>
-              )}
-            </div>
+              </summary>
+              <div className="px-6 pb-5">
+                <p className="font-body text-[14px] text-text-muted leading-relaxed border-t border-border/50 pt-4">
+                  {faq.answer}
+                </p>
+              </div>
+            </details>
           ))}
         </div>
       </div>
