@@ -1,9 +1,13 @@
 import { config, collection, singleton, fields } from "@keystatic/core";
 
-const isProduction = process.env.NODE_ENV === "production";
+// Use GitHub storage only when all required OAuth env vars are present
+const hasGithubConfig =
+  !!process.env.KEYSTATIC_GITHUB_CLIENT_ID &&
+  !!process.env.KEYSTATIC_GITHUB_CLIENT_SECRET &&
+  !!process.env.KEYSTATIC_SECRET;
 
 export default config({
-  storage: isProduction
+  storage: hasGithubConfig
     ? {
         kind: "github",
         repo: {
