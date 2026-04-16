@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Outfit, Space_Grotesk } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Analytics from "@/components/Analytics";
+import { getIntegrations } from "@/lib/settings";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -81,17 +82,75 @@ const websiteSchema = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const integrations = await getIntegrations();
+
+  const gaId = integrations.gaMeasurementId || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "";
+  const gtmId = integrations.gtmId || "";
+
   return (
     <html
       lang="en"
       className={`${outfit.variable} ${spaceGrotesk.variable} h-full`}
     >
+      <head>
+        {/* Google Search Console verification */}
+        {integrations.gscVerificationCode && (
+          <meta
+            name="google-site-verification"
+            content={integrations.gscVerificationCode}
+          />
+        )}
+
+        {/* Google Tag Manager — head snippet */}
+        {gtmId && (
+          <Script id="gtm-head" strategy="afterInteractive">
+            {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${gtmId}');`}
+          </Script>
+        )}
+
+        {/* Google Analytics 4 (direct — only if GTM not used) */}
+        {gaId && !gtmId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
+            </Script>
+          </>
+        )}
+
+        {/* Custom <head> scripts from admin */}
+        {integrations.headScripts && (
+          <div
+            dangerouslySetInnerHTML={{ __html: integrations.headScripts }}
+          />
+        )}
+      </head>
+
       <body className="min-h-full antialiased bg-void text-text-primary font-body">
+        {/* Google Tag Manager — noscript fallback */}
+        {gtmId && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
@@ -100,10 +159,17 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        <Analytics />
+
         <Navbar />
         <main>{children}</main>
         <Footer />
+
+        {/* Custom <body> scripts from admin */}
+        {integrations.bodyScripts && (
+          <div
+            dangerouslySetInnerHTML={{ __html: integrations.bodyScripts }}
+          />
+        )}
       </body>
     </html>
   );

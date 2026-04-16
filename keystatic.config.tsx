@@ -126,6 +126,41 @@ export default config({
       },
     }),
 
+    /* Integrations & Scripts */
+    integrations: singleton({
+      label: "Integrations & Scripts",
+      path: "content/config/integrations",
+      schema: {
+        // ── Analytics ──────────────────────────────────────────────────
+        gaMeasurementId: fields.text({
+          label: "Google Analytics 4 — Measurement ID",
+          description: "Format: G-XXXXXXXXXX. Find it in GA4 → Admin → Data Streams.",
+        }),
+        // ── Search Console ─────────────────────────────────────────────
+        gscVerificationCode: fields.text({
+          label: "Google Search Console — Verification Code",
+          description: "Paste only the content value from the <meta name=\"google-site-verification\" content=\"XXXXX\"> tag.",
+        }),
+        // ── Custom Head Scripts ────────────────────────────────────────
+        headScripts: fields.text({
+          label: "Custom <head> Scripts",
+          description: "Code injected inside <head> on every page. Use full <script> or <style> tags. Useful for: Meta Pixel, Hotjar, cookie banners, etc.",
+          multiline: true,
+        }),
+        // ── Custom Body Scripts ────────────────────────────────────────
+        bodyScripts: fields.text({
+          label: "Custom <body> Scripts",
+          description: "Code injected before </body> on every page. Use full <script> tags. Useful for: live chat widgets, GTM noscript, etc.",
+          multiline: true,
+        }),
+        // ── Google Tag Manager ─────────────────────────────────────────
+        gtmId: fields.text({
+          label: "Google Tag Manager — Container ID",
+          description: "Format: GTM-XXXXXXX. If set, GTM script is injected automatically. Leave blank if using GA4 directly.",
+        }),
+      },
+    }),
+
     /* Site Settings */
     siteSettings: singleton({
       label: "Site Settings",
