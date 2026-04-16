@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   description:
     "Expert SEO content writing for iGaming, crypto, adult, cannabis, dental and SaaS. E-E-A-T-optimised blog posts, landing pages and editorial content that ranks and converts.",
   alternates: { canonical: "https://www.fastseosolutions.com/content-writing-services/" },
+  robots: { index: false, follow: false },
 };
 
 const features = [

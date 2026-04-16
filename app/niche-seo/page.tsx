@@ -57,12 +57,6 @@ const niches = [
     desc: "High-authority niche link building for restricted industries. Manual outreach, niche edits, and digital PR — no PBNs.",
     accent: "text-mint",
   },
-  {
-    label: "Content Writing",
-    href: "/content-writing-services/",
-    desc: "E-E-A-T-compliant content for competitive and regulated niches. Blog posts, landing pages, and editorial content that ranks.",
-    accent: "text-electric",
-  },
 ];
 
 const schemaOrg = {
