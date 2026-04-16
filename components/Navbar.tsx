@@ -29,6 +29,7 @@ const topNavLinks = [
   { label: "Services",      href: "/niche-seo/",              dropdown: serviceLinks },
   { label: "Link Building", href: "/link-building-services/", dropdown: linkBuildingLinks },
   { label: "AI Search",     href: "/ai-seo-services/",        dropdown: null },
+  { label: "Pricing",       href: "/pricing/",                dropdown: null },
   { label: "Case Studies",  href: "/case-studies/",           dropdown: null },
   { label: "Blog",          href: "/blog/",                   dropdown: null },
   { label: "About",         href: "/about/",                  dropdown: null },
