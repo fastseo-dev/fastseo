@@ -1,10 +1,8 @@
 import { config, collection, singleton, fields } from "@keystatic/core";
 
-// Use GitHub storage only when all required OAuth env vars are present
-const hasGithubConfig =
-  !!process.env.KEYSTATIC_GITHUB_CLIENT_ID &&
-  !!process.env.KEYSTATIC_GITHUB_CLIENT_SECRET &&
-  !!process.env.KEYSTATIC_SECRET;
+// NEXT_PUBLIC_KEYSTATIC_MODE=github must be set in Vercel env vars.
+// NEXT_PUBLIC_ prefix makes it available in the browser (client-side admin UI).
+const hasGithubConfig = process.env.NEXT_PUBLIC_KEYSTATIC_MODE === "github";
 
 export default config({
   storage: hasGithubConfig
