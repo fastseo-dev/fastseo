@@ -1,19 +1,13 @@
 import { config, collection, singleton, fields } from "@keystatic/core";
 
-// NEXT_PUBLIC_KEYSTATIC_MODE=github must be set in Vercel env vars.
-// NEXT_PUBLIC_ prefix makes it available in the browser (client-side admin UI).
-const hasGithubConfig = process.env.NEXT_PUBLIC_KEYSTATIC_MODE === "github";
-
 export default config({
-  storage: hasGithubConfig
-    ? {
-        kind: "github",
-        repo: {
-          owner: process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER ?? "fastseo-dev",
-          name: process.env.NEXT_PUBLIC_GITHUB_REPO_NAME ?? "fastseo",
-        },
-      }
-    : { kind: "local" },
+  storage: {
+    kind: "github",
+    repo: {
+      owner: "fastseo-dev",
+      name: "fastseo",
+    },
+  },
 
   ui: {
     brand: { name: "FastSEO Admin" },
@@ -77,7 +71,7 @@ export default config({
           ],
           defaultValue: "iGaming",
         }),
-        client: fields.text({ label: "Client Description (e.g. Online Casino Brand)" }),
+        client: fields.text({ label: "Client Description" }),
         result: fields.text({ label: "Headline Result (e.g. 0 → 180,000)" }),
         metric: fields.text({ label: "Metric Label (e.g. Monthly organic visits)" }),
         period: fields.text({ label: "Time Period (e.g. 14 months)" }),
@@ -92,6 +86,36 @@ export default config({
 
   /* ─── Singletons ──────────────────────────────────────────────────────── */
   singletons: {
+
+    /* Integrations & Scripts */
+    integrations: singleton({
+      label: "Integrations & Scripts",
+      path: "content/config/integrations",
+      schema: {
+        gaMeasurementId: fields.text({
+          label: "Google Analytics 4 — Measurement ID",
+          description: "Format: G-XXXXXXXXXX. Find it in GA4 → Admin → Data Streams.",
+        }),
+        gscVerificationCode: fields.text({
+          label: "Google Search Console — Verification Code",
+          description: "Paste only the content value from the <meta name=\"google-site-verification\" content=\"XXXXX\"> tag.",
+        }),
+        gtmId: fields.text({
+          label: "Google Tag Manager — Container ID",
+          description: "Format: GTM-XXXXXXX. If set, GTM is used instead of direct GA4.",
+        }),
+        headScripts: fields.text({
+          label: "Custom <head> Scripts",
+          description: "Raw <script> or <style> tags injected into every page head. For Meta Pixel, Hotjar, cookie banners, etc.",
+          multiline: true,
+        }),
+        bodyScripts: fields.text({
+          label: "Custom <body> Scripts",
+          description: "Raw <script> tags injected before </body>. For live chat, intercom, etc.",
+          multiline: true,
+        }),
+      },
+    }),
 
     /* Pricing */
     pricing: singleton({
@@ -110,52 +134,11 @@ export default config({
                 text: fields.text({ label: "Feature" }),
                 included: fields.checkbox({ label: "Included", defaultValue: true }),
               }),
-              {
-                label: "Features",
-                itemLabel: (props) => props.fields.text.value,
-              }
+              { label: "Features", itemLabel: (props) => props.fields.text.value }
             ),
           }),
-          {
-            label: "Plans",
-            itemLabel: (props) => props.fields.name.value,
-          }
+          { label: "Plans", itemLabel: (props) => props.fields.name.value }
         ),
-      },
-    }),
-
-    /* Integrations & Scripts */
-    integrations: singleton({
-      label: "Integrations & Scripts",
-      path: "content/config/integrations",
-      schema: {
-        // ── Analytics ──────────────────────────────────────────────────
-        gaMeasurementId: fields.text({
-          label: "Google Analytics 4 — Measurement ID",
-          description: "Format: G-XXXXXXXXXX. Find it in GA4 → Admin → Data Streams.",
-        }),
-        // ── Search Console ─────────────────────────────────────────────
-        gscVerificationCode: fields.text({
-          label: "Google Search Console — Verification Code",
-          description: "Paste only the content value from the <meta name=\"google-site-verification\" content=\"XXXXX\"> tag.",
-        }),
-        // ── Custom Head Scripts ────────────────────────────────────────
-        headScripts: fields.text({
-          label: "Custom <head> Scripts",
-          description: "Code injected inside <head> on every page. Use full <script> or <style> tags. Useful for: Meta Pixel, Hotjar, cookie banners, etc.",
-          multiline: true,
-        }),
-        // ── Custom Body Scripts ────────────────────────────────────────
-        bodyScripts: fields.text({
-          label: "Custom <body> Scripts",
-          description: "Code injected before </body> on every page. Use full <script> tags. Useful for: live chat widgets, GTM noscript, etc.",
-          multiline: true,
-        }),
-        // ── Google Tag Manager ─────────────────────────────────────────
-        gtmId: fields.text({
-          label: "Google Tag Manager — Container ID",
-          description: "Format: GTM-XXXXXXX. If set, GTM script is injected automatically. Leave blank if using GA4 directly.",
-        }),
       },
     }),
 
