@@ -15,35 +15,22 @@ export async function GET(req: Request) {
   };
 
   if (code) {
-    // Test WITHOUT redirect_uri (same as Keystatic does it)
-    const url1 = new URL("https://github.com/login/oauth/access_token");
-    url1.searchParams.set("client_id", clientId);
-    url1.searchParams.set("client_secret", clientSecret);
-    url1.searchParams.set("code", code);
+    const url = new URL("https://github.com/login/oauth/access_token");
+    url.searchParams.set("client_id", clientId);
+    url.searchParams.set("client_secret", clientSecret);
+    url.searchParams.set("code", code);
+    url.searchParams.set("redirect_uri", `${origin}/api/ks-debug`);
 
-    const res1 = await fetch(url1.toString(), {
+    const res = await fetch(url.toString(), {
       method: "POST",
       headers: { Accept: "application/json" },
     });
-    const body1 = await res1.json();
-
-    // Test WITH redirect_uri (in case GitHub requires it to match auth step)
-    const url2 = new URL("https://github.com/login/oauth/access_token");
-    url2.searchParams.set("client_id", clientId);
-    url2.searchParams.set("client_secret", clientSecret);
-    url2.searchParams.set("code", code);
-    url2.searchParams.set("redirect_uri", `${origin}/api/ks-debug`);
-
-    const res2 = await fetch(url2.toString(), {
-      method: "POST",
-      headers: { Accept: "application/json" },
-    });
-    const body2 = await res2.json();
+    const body = await res.json();
 
     return NextResponse.json({
       info,
-      without_redirect_uri: { status: res1.status, response: body1 },
-      with_redirect_uri: { status: res2.status, response: body2 },
+      github_status: res.status,
+      github_response: body,
     });
   }
 
