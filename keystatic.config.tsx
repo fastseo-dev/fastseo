@@ -9,6 +9,12 @@ export default config({
     },
   },
 
+  auth: {
+    sessions: {
+      secret: process.env.KEYSTATIC_SECRET!,
+    },
+  },
+
   ui: {
     brand: { name: "FastSEO Admin" },
   },
