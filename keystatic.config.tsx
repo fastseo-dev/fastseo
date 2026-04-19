@@ -1,5 +1,4 @@
 import { config, collection, singleton, fields } from "@keystatic/core";
-import { getGitHubAuth } from "@keystatic/next/github";
 
 export default config({
   storage: {
@@ -8,15 +7,6 @@ export default config({
       owner: "fastseo-dev",
       name: "fastseo",
     },
-  },
-
-  auth: getGitHubAuth({
-    clientId: process.env.KEYSTATIC_GITHUB_CLIENT_ID!,
-    clientSecret: process.env.KEYSTATIC_GITHUB_CLIENT_SECRET!,
-  }),
-
-  session: {
-    secret: process.env.KEYSTATIC_SECRET!,
   },
 
   ui: {
