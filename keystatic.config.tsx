@@ -13,6 +13,11 @@ export default config({
     brand: { name: "FastSEO Admin" },
   },
 
+  // Password-based authentication
+  auth: {
+    mode: "explicit",
+  },
+
   /* ─── Collections ─────────────────────────────────────────────────────── */
   collections: {
 
