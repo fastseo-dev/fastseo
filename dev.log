@@ -1,0 +1,21 @@
+
+> fastseo@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.4:3000
+- Environments: .env.local
+✓ Ready in 889ms
+⚠ Invalid next.config.ts options detected: 
+⚠     Unrecognized key(s) in object: 'turbopack' at "experimental"
+⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3001
+- PID:          17468
+- Dir:          C:\Users\Lovelesh\fastseo
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 17468 /F to stop it.
+[?25h
