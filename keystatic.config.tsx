@@ -11,9 +11,13 @@ export default config({
   },
 
   auth: getGitHubAuth({
-    clientId: process.env.KEYSTATIC_GITHUB_CLIENT_ID,
-    clientSecret: process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
+    clientId: process.env.KEYSTATIC_GITHUB_CLIENT_ID!,
+    clientSecret: process.env.KEYSTATIC_GITHUB_CLIENT_SECRET!,
   }),
+
+  session: {
+    secret: process.env.KEYSTATIC_SECRET!,
+  },
 
   ui: {
     brand: { name: "FastSEO Admin" },
