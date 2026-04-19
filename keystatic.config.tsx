@@ -10,7 +10,10 @@ export default config({
     },
   },
 
-  auth: getGitHubAuth(),
+  auth: getGitHubAuth({
+    clientId: process.env.KEYSTATIC_GITHUB_CLIENT_ID,
+    clientSecret: process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
+  }),
 
   ui: {
     brand: { name: "FastSEO Admin" },
