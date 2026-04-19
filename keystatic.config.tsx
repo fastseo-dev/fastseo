@@ -16,7 +16,7 @@ export default config({
   // Session-based authentication with password
   auth: {
     sessions: {
-      secret: process.env.KEYSTATIC_SESSION_SECRET || "dev-secret-change-in-production",
+      secret: process.env.KEYSTATIC_SECRET!,
     },
   },
 
