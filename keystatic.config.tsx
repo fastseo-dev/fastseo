@@ -13,13 +13,6 @@ export default config({
     brand: { name: "FastSEO Admin" },
   },
 
-  // Session-based authentication with password
-  auth: {
-    sessions: {
-      secret: process.env.KEYSTATIC_SECRET!,
-    },
-  },
-
   /* ─── Collections ─────────────────────────────────────────────────────── */
   collections: {
 
