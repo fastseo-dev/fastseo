@@ -4,7 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getIntegrations } from "@/lib/settings";
+import { supabaseServer } from "@/lib/supabase";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -71,9 +71,26 @@ const websiteSchema = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const integrations = await getIntegrations();
-  const gaId  = integrations.gaMeasurementId || process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "";
-  const gtmId = integrations.gtmId || "";
+  let gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "";
+  let gtmId = "";
+  let gscVerificationCode = "";
+  let headScripts = "";
+  let bodyScripts = "";
+
+  try {
+    const { data } = await supabaseServer.from("integrations").select("*").limit(1).single();
+    if (data) {
+      gaId = data.ga_measurement_id || gaId;
+      gtmId = data.gtm_id || "";
+      gscVerificationCode = data.gsc_verification_code || "";
+      headScripts = data.head_scripts || "";
+      bodyScripts = data.body_scripts || "";
+    }
+  } catch {
+    // Use defaults if fetch fails
+  }
+
+  const integrations = { gscVerificationCode, headScripts, bodyScripts };
 
   return (
     <html lang="en" className={`${outfit.variable} ${spaceGrotesk.variable} h-full`}>
