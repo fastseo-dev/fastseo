@@ -17,6 +17,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const pathname = usePathname();
 
+  // Don't show sidebar on login page
+  if (pathname === '/admin/login') {
+    return children;
+  }
+
   const handleLogout = async () => {
     // Clear cookie by calling logout API
     await fetch('/api/admin/logout', { method: 'POST' });
