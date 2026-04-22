@@ -14,24 +14,45 @@ interface BlogPost {
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch('/api/admin/blog');
-        if (res.ok) {
-          const data = await res.json();
-          setPosts(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch blog posts:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPosts();
   }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch('/api/admin/blog');
+      if (res.ok) {
+        const data = await res.json();
+        setPosts(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch blog posts:', error);
+      alert('Error loading blog posts');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this post?')) return;
+
+    setDeleting(id);
+    try {
+      const res = await fetch(`/api/admin/blog/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setPosts(posts.filter((p) => p.id !== id));
+      } else {
+        alert('Failed to delete post');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Error deleting post');
+    } finally {
+      setDeleting(null);
+    }
+  };
 
   return (
     <div>
@@ -73,6 +94,13 @@ export default function BlogPage() {
                     >
                       Edit
                     </Link>
+                    <button
+                      onClick={() => handleDelete(post.id)}
+                      disabled={deleting === post.id}
+                      className="text-red-600 hover:text-red-800 disabled:opacity-50"
+                    >
+                      {deleting === post.id ? 'Deleting...' : 'Delete'}
+                    </button>
                   </td>
                 </tr>
               ))}

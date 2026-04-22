@@ -13,24 +13,45 @@ interface CaseStudy {
 export default function CaseStudiesPage() {
   const [studies, setStudies] = useState<CaseStudy[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchStudies = async () => {
-      try {
-        const res = await fetch('/api/admin/case-studies');
-        if (res.ok) {
-          const data = await res.json();
-          setStudies(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch case studies:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchStudies();
   }, []);
+
+  const fetchStudies = async () => {
+    try {
+      const res = await fetch('/api/admin/case-studies');
+      if (res.ok) {
+        const data = await res.json();
+        setStudies(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch case studies:', error);
+      alert('Error loading case studies');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this case study?')) return;
+
+    setDeleting(id);
+    try {
+      const res = await fetch(`/api/admin/case-studies/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setStudies(studies.filter((s) => s.id !== id));
+      } else {
+        alert('Failed to delete case study');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Error deleting case study');
+    } finally {
+      setDeleting(null);
+    }
+  };
 
   return (
     <div>
@@ -72,6 +93,13 @@ export default function CaseStudiesPage() {
                     >
                       Edit
                     </Link>
+                    <button
+                      onClick={() => handleDelete(study.id)}
+                      disabled={deleting === study.id}
+                      className="text-red-600 hover:text-red-800 disabled:opacity-50"
+                    >
+                      {deleting === study.id ? 'Deleting...' : 'Delete'}
+                    </button>
                   </td>
                 </tr>
               ))}
