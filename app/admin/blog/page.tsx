@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 interface BlogPost {
   id: string;
@@ -9,6 +10,7 @@ interface BlogPost {
   slug: string;
   date: string;
   author: string;
+  status: 'draft' | 'published';
 }
 
 export default function BlogPage() {
@@ -29,7 +31,7 @@ export default function BlogPage() {
       }
     } catch (error) {
       console.error('Failed to fetch blog posts:', error);
-      alert('Error loading blog posts');
+      toast.error('Error loading blog posts');
     } finally {
       setLoading(false);
     }
@@ -43,12 +45,13 @@ export default function BlogPage() {
       const res = await fetch(`/api/admin/blog/${id}`, { method: 'DELETE' });
       if (res.ok) {
         setPosts(posts.filter((p) => p.id !== id));
+        toast.success('Post deleted');
       } else {
-        alert('Failed to delete post');
+        toast.error('Failed to delete post');
       }
     } catch (error) {
       console.error('Delete error:', error);
-      alert('Error deleting post');
+      toast.error('Error deleting post');
     } finally {
       setDeleting(null);
     }
@@ -78,6 +81,7 @@ export default function BlogPage() {
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Title</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Author</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Date</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Status</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Actions</th>
               </tr>
             </thead>
@@ -87,6 +91,17 @@ export default function BlogPage() {
                   <td className="px-6 py-4 text-sm text-gray-900">{post.title}</td>
                   <td className="px-6 py-4 text-sm text-gray-600">{post.author}</td>
                   <td className="px-6 py-4 text-sm text-gray-600">{post.date}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <span
+                      className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                        post.status === 'published'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
+                    </span>
+                  </td>
                   <td className="px-6 py-4 text-sm space-x-2">
                     <Link
                       href={`/admin/blog/${post.id}`}

@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data, error } = await supabaseServer
       .from('blog_posts')
-      .select('id, title, slug, author, date')
+      .select('id, title, slug, author, date, status')
       .order('date', { ascending: false });
 
     if (error) throw error;

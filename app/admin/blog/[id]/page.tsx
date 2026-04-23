@@ -20,6 +20,7 @@ interface BlogPost {
   date: string;
   categories: string[];
   featured_image_url: string;
+  status: 'draft' | 'published';
 }
 
 export default function BlogEditorPage() {
@@ -37,6 +38,7 @@ export default function BlogEditorPage() {
     date: new Date().toISOString().split('T')[0],
     categories: [],
     featured_image_url: '',
+    status: 'draft',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -207,6 +209,17 @@ export default function BlogEditorPage() {
             }
             placeholder="SEO, Marketing, Tips"
           />
+
+          <FormField label="Status">
+            <select
+              value={post.status}
+              onChange={(e) => setPost({ ...post, status: e.target.value as 'draft' | 'published' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+          </FormField>
         </div>
 
         <div className="mt-8 flex space-x-3">
