@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
+import { Toaster } from 'sonner';
 
 const menuItems = [
   { label: 'Dashboard', href: '/admin' },
@@ -29,7 +30,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <>
+      <Toaster position="top-right" />
+      <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-gray-900 text-white flex flex-col">
         <div className="p-6 border-b border-gray-700">
@@ -72,6 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <div className="flex-1 overflow-auto p-6">{children}</div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

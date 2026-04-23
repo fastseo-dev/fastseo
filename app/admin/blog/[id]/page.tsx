@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { validateAndSanitize, validators } from '@/lib/validation';
+import { RichTextEditor } from '@/components/admin/RichTextEditor';
+import { ImageUpload } from '@/components/admin/ImageUpload';
+import { FormInput } from '@/components/admin/FormInput';
+import { FormTextarea } from '@/components/admin/FormTextarea';
+import { FormField } from '@/components/admin/FormField';
+import { toast } from 'sonner';
 
 interface BlogPost {
   id: string;
@@ -13,6 +19,7 @@ interface BlogPost {
   author: string;
   date: string;
   categories: string[];
+  featured_image_url: string;
 }
 
 export default function BlogEditorPage() {
@@ -29,6 +36,7 @@ export default function BlogEditorPage() {
     author: 'FastSEO',
     date: new Date().toISOString().split('T')[0],
     categories: [],
+    featured_image_url: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -104,14 +112,14 @@ export default function BlogEditorPage() {
       });
 
       if (res.ok) {
-        alert('Post saved successfully');
+        toast.success('Post saved successfully');
         router.push('/admin/blog');
       } else {
-        alert('Failed to save post');
+        toast.error('Failed to save post');
       }
     } catch (error) {
       console.error('Error saving post:', error);
-      alert('Error saving post');
+      toast.error('Error saving post');
     } finally {
       setSaving(false);
     }
@@ -127,98 +135,78 @@ export default function BlogEditorPage() {
 
       <form onSubmit={handleSubmit} className="max-w-4xl bg-white rounded-lg shadow p-6">
         <div className="space-y-6">
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
-            <input
-              type="text"
-              value={post.title}
-              onChange={(e) => setPost({ ...post, title: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Post title"
-            />
-            {errors.title && <p className="text-red-600 text-sm mt-1">{errors.title}</p>}
-          </div>
+          <FormInput
+            label="Title"
+            name="title"
+            value={post.title}
+            onChange={(e) => setPost({ ...post, title: e.target.value })}
+            placeholder="Post title"
+            required
+            error={errors.title}
+          />
 
-          {/* Slug */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Slug</label>
-            <input
-              type="text"
-              value={post.slug}
-              onChange={(e) => setPost({ ...post, slug: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="post-slug"
-            />
-            {errors.slug && <p className="text-red-600 text-sm mt-1">{errors.slug}</p>}
-          </div>
+          <FormInput
+            label="Slug"
+            name="slug"
+            value={post.slug}
+            onChange={(e) => setPost({ ...post, slug: e.target.value })}
+            placeholder="post-slug"
+            required
+            error={errors.slug}
+          />
 
-          {/* Date */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Publish Date</label>
-            <input
-              type="date"
-              value={post.date}
-              onChange={(e) => setPost({ ...post, date: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <FormInput
+            label="Publish Date"
+            name="date"
+            type="date"
+            value={post.date}
+            onChange={(e) => setPost({ ...post, date: e.target.value })}
+          />
 
-          {/* Excerpt */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Excerpt</label>
-            <textarea
-              value={post.excerpt}
-              onChange={(e) => setPost({ ...post, excerpt: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Short summary"
-              rows={2}
-            />
-          </div>
+          <FormTextarea
+            label="Excerpt"
+            name="excerpt"
+            value={post.excerpt}
+            onChange={(e) => setPost({ ...post, excerpt: e.target.value })}
+            placeholder="Short summary"
+            rows={2}
+          />
 
-          {/* Content */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
-            <textarea
-              value={post.content}
-              onChange={(e) => setPost({ ...post, content: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-              placeholder="Post content (HTML)"
-              rows={12}
-            />
-            {errors.content && <p className="text-red-600 text-sm mt-1">{errors.content}</p>}
-          </div>
+          <ImageUpload
+            label="Featured Image"
+            value={post.featured_image_url}
+            onChange={(url) => setPost({ ...post, featured_image_url: url })}
+          />
 
-          {/* Author */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Author</label>
-            <input
-              type="text"
-              value={post.author}
-              onChange={(e) => setPost({ ...post, author: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Author name"
-            />
-          </div>
+          <RichTextEditor
+            label="Content"
+            value={post.content}
+            onChange={(html) => setPost({ ...post, content: html })}
+            required
+            error={errors.content}
+            placeholder="Write your post content here..."
+          />
 
-          {/* Categories */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Categories (comma-separated)
-            </label>
-            <input
-              type="text"
-              value={post.categories.join(', ')}
-              onChange={(e) =>
-                setPost({
-                  ...post,
-                  categories: e.target.value.split(',').map((c) => c.trim()),
-                })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="SEO, Marketing, Tips"
-            />
-          </div>
+          <FormInput
+            label="Author"
+            name="author"
+            value={post.author}
+            onChange={(e) => setPost({ ...post, author: e.target.value })}
+            placeholder="Author name"
+          />
+
+          <FormInput
+            label="Categories (comma-separated)"
+            name="categories"
+            value={post.categories.join(', ')}
+            onChange={(e) =>
+              setPost({
+                ...post,
+                categories: e.target.value.split(',').map((c) => c.trim()),
+              })
+            }
+            placeholder="SEO, Marketing, Tips"
+          />
         </div>
 
         <div className="mt-8 flex space-x-3">
