@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 interface CaseStudy {
   id: string;
   title: string;
   niche: string;
   result: string;
+  status: 'draft' | 'published';
 }
 
 export default function CaseStudiesPage() {
@@ -28,7 +30,7 @@ export default function CaseStudiesPage() {
       }
     } catch (error) {
       console.error('Failed to fetch case studies:', error);
-      alert('Error loading case studies');
+      toast.error('Error loading case studies');
     } finally {
       setLoading(false);
     }
@@ -42,12 +44,13 @@ export default function CaseStudiesPage() {
       const res = await fetch(`/api/admin/case-studies/${id}`, { method: 'DELETE' });
       if (res.ok) {
         setStudies(studies.filter((s) => s.id !== id));
+        toast.success('Case study deleted');
       } else {
-        alert('Failed to delete case study');
+        toast.error('Failed to delete case study');
       }
     } catch (error) {
       console.error('Delete error:', error);
-      alert('Error deleting case study');
+      toast.error('Error deleting case study');
     } finally {
       setDeleting(null);
     }
@@ -77,6 +80,7 @@ export default function CaseStudiesPage() {
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Title</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Niche</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Result</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Status</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Actions</th>
               </tr>
             </thead>
@@ -86,6 +90,17 @@ export default function CaseStudiesPage() {
                   <td className="px-6 py-4 text-sm text-gray-900">{study.title}</td>
                   <td className="px-6 py-4 text-sm text-gray-600">{study.niche}</td>
                   <td className="px-6 py-4 text-sm text-gray-600">{study.result}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <span
+                      className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                        study.status === 'published'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {study.status.charAt(0).toUpperCase() + study.status.slice(1)}
+                    </span>
+                  </td>
                   <td className="px-6 py-4 text-sm space-x-2">
                     <Link
                       href={`/admin/case-studies/${study.id}`}

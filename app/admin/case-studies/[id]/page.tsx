@@ -3,6 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { validateAndSanitize, validators } from '@/lib/validation';
+import { RichTextEditor } from '@/components/admin/RichTextEditor';
+import { ImageUpload } from '@/components/admin/ImageUpload';
+import { FormInput } from '@/components/admin/FormInput';
+import { FormField } from '@/components/admin/FormField';
+import { toast } from 'sonner';
 
 const NICHES = ['iGaming', 'Crypto', 'Adult', 'Cannabis', 'Dental', 'SaaS'];
 
@@ -17,6 +22,8 @@ interface CaseStudy {
   period: string;
   tags: string[];
   body: string;
+  featured_image_url: string;
+  status: 'draft' | 'published';
 }
 
 export default function CaseStudyEditorPage() {
@@ -35,6 +42,8 @@ export default function CaseStudyEditorPage() {
     period: '',
     tags: [],
     body: '',
+    featured_image_url: '',
+    status: 'draft',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -54,11 +63,11 @@ export default function CaseStudyEditorPage() {
         const data = await res.json();
         setStudy(data);
       } else {
-        alert('Failed to load case study');
+        toast.error('Failed to load case study');
       }
     } catch (error) {
       console.error('Error fetching study:', error);
-      alert('Error loading case study');
+      toast.error('Error loading case study');
     } finally {
       setLoading(false);
     }
@@ -106,14 +115,14 @@ export default function CaseStudyEditorPage() {
       });
 
       if (res.ok) {
-        alert('Case study saved successfully');
+        toast.success('Case study saved');
         router.push('/admin/case-studies');
       } else {
-        alert('Failed to save case study');
+        toast.error('Failed to save case study');
       }
     } catch (error) {
       console.error('Error saving:', error);
-      alert('Error saving case study');
+      toast.error('Error saving case study');
     } finally {
       setSaving(false);
     }
@@ -129,35 +138,27 @@ export default function CaseStudyEditorPage() {
 
       <form onSubmit={handleSubmit} className="max-w-4xl bg-white rounded-lg shadow p-6">
         <div className="space-y-6">
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
-            <input
-              type="text"
-              value={study.title}
-              onChange={(e) => setStudy({ ...study, title: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Case study title"
-            />
-            {errors.title && <p className="text-red-600 text-sm mt-1">{errors.title}</p>}
-          </div>
+          <FormInput
+            label="Title"
+            name="title"
+            value={study.title}
+            onChange={(e) => setStudy({ ...study, title: e.target.value })}
+            placeholder="Case study title"
+            required
+            error={errors.title}
+          />
 
-          {/* Slug */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Slug</label>
-            <input
-              type="text"
-              value={study.slug}
-              onChange={(e) => setStudy({ ...study, slug: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="case-study-slug"
-            />
-            {errors.slug && <p className="text-red-600 text-sm mt-1">{errors.slug}</p>}
-          </div>
+          <FormInput
+            label="Slug"
+            name="slug"
+            value={study.slug}
+            onChange={(e) => setStudy({ ...study, slug: e.target.value })}
+            placeholder="case-study-slug"
+            required
+            error={errors.slug}
+          />
 
-          {/* Niche */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Niche</label>
+          <FormField label="Niche">
             <select
               value={study.niche}
               onChange={(e) => setStudy({ ...study, niche: e.target.value })}
@@ -169,83 +170,74 @@ export default function CaseStudyEditorPage() {
                 </option>
               ))}
             </select>
-          </div>
+          </FormField>
 
-          {/* Client */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Client Description</label>
-            <input
-              type="text"
-              value={study.client}
-              onChange={(e) => setStudy({ ...study, client: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Client description"
-            />
-          </div>
+          <FormInput
+            label="Client Description"
+            name="client"
+            value={study.client}
+            onChange={(e) => setStudy({ ...study, client: e.target.value })}
+            placeholder="Client description"
+          />
 
-          {/* Result */}
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Result</label>
-              <input
-                type="text"
-                value={study.result}
-                onChange={(e) => setStudy({ ...study, result: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="0 → 180,000"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Metric</label>
-              <input
-                type="text"
-                value={study.metric}
-                onChange={(e) => setStudy({ ...study, metric: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Monthly organic visits"
-              />
-            </div>
+            <FormInput
+              label="Result"
+              name="result"
+              value={study.result}
+              onChange={(e) => setStudy({ ...study, result: e.target.value })}
+              placeholder="0 → 180,000"
+            />
+            <FormInput
+              label="Metric"
+              name="metric"
+              value={study.metric}
+              onChange={(e) => setStudy({ ...study, metric: e.target.value })}
+              placeholder="Monthly organic visits"
+            />
           </div>
 
-          {/* Period */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Time Period</label>
-            <input
-              type="text"
-              value={study.period}
-              onChange={(e) => setStudy({ ...study, period: e.target.value })}
+          <FormInput
+            label="Time Period"
+            name="period"
+            value={study.period}
+            onChange={(e) => setStudy({ ...study, period: e.target.value })}
+            placeholder="14 months"
+          />
+
+          <FormInput
+            label="Tags (comma-separated)"
+            name="tags"
+            value={study.tags.join(', ')}
+            onChange={(e) =>
+              setStudy({ ...study, tags: e.target.value.split(',').map((t) => t.trim()) })
+            }
+            placeholder="organic, seo, ranking"
+          />
+
+          <ImageUpload
+            label="Featured Image"
+            value={study.featured_image_url}
+            onChange={(url) => setStudy({ ...study, featured_image_url: url })}
+          />
+
+          <RichTextEditor
+            label="Details"
+            value={study.body}
+            onChange={(html) => setStudy({ ...study, body: html })}
+            placeholder="Write case study details here..."
+          />
+
+          <FormField label="Status">
+            <select
+              value={study.status}
+              onChange={(e) => setStudy({ ...study, status: e.target.value as 'draft' | 'published' })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="14 months"
-            />
-          </div>
-
-          {/* Tags */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tags (comma-separated)
-            </label>
-            <input
-              type="text"
-              value={study.tags.join(', ')}
-              onChange={(e) =>
-                setStudy({ ...study, tags: e.target.value.split(',').map((t) => t.trim()) })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="organic, seo, ranking"
-            />
-          </div>
-
-          {/* Body */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Details</label>
-            <textarea
-              value={study.body}
-              onChange={(e) => setStudy({ ...study, body: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-              placeholder="Case study details (HTML)"
-              rows={12}
-            />
-          </div>
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+          </FormField>
         </div>
 
         <div className="mt-8 flex space-x-3">

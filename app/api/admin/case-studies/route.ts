@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data, error } = await supabaseServer
       .from('case_studies')
-      .select('id, title, niche, result')
+      .select('id, title, niche, result, status')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
