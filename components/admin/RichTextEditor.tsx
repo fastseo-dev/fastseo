@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -31,14 +32,28 @@ export function RichTextEditor({
       }),
       Link.configure({ openOnClick: false }),
     ],
-    content: value,
+    content: value || '',
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
     onBlur: onBlur,
   });
 
-  if (!editor) return null;
+  useEffect(() => {
+    if (editor && value && editor.getHTML() !== value) {
+      editor.commands.setContent(value);
+    }
+  }, [value, editor]);
+
+  if (!editor) {
+    return (
+      <FormField label={label} error={error} required={required}>
+        <div className="border border-gray-300 rounded-lg p-3 min-h-80 bg-gray-50">
+          <p className="text-gray-400">Loading editor...</p>
+        </div>
+      </FormField>
+    );
+  }
 
   return (
     <FormField label={label} error={error} required={required}>
