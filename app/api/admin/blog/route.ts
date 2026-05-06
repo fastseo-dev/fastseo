@@ -16,16 +16,16 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Minimal fields guaranteed to exist in every blog_posts table
+// Absolute minimum — only title + slug guaranteed at table creation
 const MIN_FIELDS = (body: Record<string, unknown>) => ({
-  title:   body.title   ?? '',
-  slug:    body.slug    ?? '',
-  content: body.content ?? '',
-  status:  body.status  ?? 'draft',
+  title: body.title ?? '',
+  slug:  body.slug  ?? '',
 });
 
 // Extended fields added in migration — saved after core insert succeeds
 const EXT_FIELDS = (body: Record<string, unknown>) => ({
+  content:            body.content             ?? '',
+  status:             body.status              ?? 'draft',
   excerpt:            body.excerpt             ?? '',
   author:             body.author              ?? 'FastSEO',
   date:               body.date               ?? new Date().toISOString().split('T')[0],

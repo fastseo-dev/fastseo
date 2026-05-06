@@ -23,13 +23,13 @@ export async function GET(
 }
 
 const MIN_FIELDS = (body: Record<string, unknown>) => ({
-  title:   body.title   ?? '',
-  slug:    body.slug    ?? '',
-  content: body.content ?? '',
-  status:  body.status  ?? 'draft',
+  title: body.title ?? '',
+  slug:  body.slug  ?? '',
 });
 
 const EXT_FIELDS = (body: Record<string, unknown>) => ({
+  content:            body.content             ?? '',
+  status:             body.status              ?? 'draft',
   excerpt:            body.excerpt             ?? '',
   author:             body.author              ?? 'FastSEO',
   date:               body.date               ?? new Date().toISOString().split('T')[0],
