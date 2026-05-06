@@ -22,28 +22,28 @@ export async function GET(
   }
 }
 
-const CORE_FIELDS = (body: Record<string, unknown>) => ({
-  title:              body.title              ?? '',
-  slug:               body.slug               ?? '',
+const MIN_FIELDS = (body: Record<string, unknown>) => ({
+  title:   body.title   ?? '',
+  slug:    body.slug    ?? '',
+  content: body.content ?? '',
+  status:  body.status  ?? 'draft',
+});
+
+const EXT_FIELDS = (body: Record<string, unknown>) => ({
   excerpt:            body.excerpt             ?? '',
-  content:            body.content             ?? '',
   author:             body.author              ?? 'FastSEO',
   date:               body.date               ?? new Date().toISOString().split('T')[0],
   categories:         body.categories          ?? [],
   featured_image_url: body.featured_image_url  ?? '',
-  status:             body.status              ?? 'draft',
-});
-
-const SEO_FIELDS = (body: Record<string, unknown>) => ({
-  focus_keyword:    body.focus_keyword    ?? '',
-  seo_title:        body.seo_title        ?? '',
-  meta_description: body.meta_description ?? '',
-  canonical_url:    body.canonical_url    ?? '',
-  robots:           body.robots           ?? 'index/follow',
-  og_title:         body.og_title         ?? '',
-  og_description:   body.og_description   ?? '',
-  og_image:         body.og_image         ?? '',
-  schema_type:      body.schema_type      ?? 'BlogPosting',
+  focus_keyword:      body.focus_keyword       ?? '',
+  seo_title:          body.seo_title           ?? '',
+  meta_description:   body.meta_description    ?? '',
+  canonical_url:      body.canonical_url       ?? '',
+  robots:             body.robots              ?? 'index/follow',
+  og_title:           body.og_title            ?? '',
+  og_description:     body.og_description      ?? '',
+  og_image:           body.og_image            ?? '',
+  schema_type:        body.schema_type         ?? 'BlogPosting',
 });
 
 export async function PUT(
@@ -54,11 +54,11 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
 
-    // Step 1: update core fields (always safe)
+    // Step 1: update minimal fields (guaranteed columns)
     const { data, error } = await supabaseServer
       .from('blog_posts')
       .update({
-        ...CORE_FIELDS(body),
+        ...MIN_FIELDS(body),
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
@@ -73,13 +73,13 @@ export async function PUT(
       );
     }
 
-    // Step 2: update SEO fields (graceful — only works once columns exist)
+    // Step 2: update extended + SEO fields (silently skipped if columns missing)
     await supabaseServer
       .from('blog_posts')
-      .update({ ...SEO_FIELDS(body), updated_at: new Date().toISOString() })
+      .update({ ...EXT_FIELDS(body), updated_at: new Date().toISOString() })
       .eq('id', id)
-      .then(({ error: seoError }) => {
-        if (seoError) console.warn('SEO fields not saved (run schema migration):', seoError.message);
+      .then(({ error: extError }) => {
+        if (extError) console.warn('Extended fields not saved — run SQL migration:', extError.message);
       });
 
     return NextResponse.json(data);
