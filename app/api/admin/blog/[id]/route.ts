@@ -15,7 +15,6 @@ export async function GET(
 
     if (error) throw error;
     if (!data) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-
     return NextResponse.json(data);
   } catch (error) {
     console.error('Blog get error:', error);
@@ -23,28 +22,29 @@ export async function GET(
   }
 }
 
-function pickFields(body: Record<string, unknown>) {
-  return {
-    title:              body.title              ?? '',
-    slug:               body.slug               ?? '',
-    excerpt:            body.excerpt             ?? '',
-    content:            body.content             ?? '',
-    author:             body.author              ?? 'FastSEO',
-    date:               body.date               ?? new Date().toISOString().split('T')[0],
-    categories:         body.categories          ?? [],
-    featured_image_url: body.featured_image_url  ?? '',
-    status:             body.status              ?? 'draft',
-    focus_keyword:      body.focus_keyword       ?? '',
-    seo_title:          body.seo_title           ?? '',
-    meta_description:   body.meta_description    ?? '',
-    canonical_url:      body.canonical_url       ?? '',
-    robots:             body.robots              ?? 'index/follow',
-    og_title:           body.og_title            ?? '',
-    og_description:     body.og_description      ?? '',
-    og_image:           body.og_image            ?? '',
-    schema_type:        body.schema_type         ?? 'BlogPosting',
-  };
-}
+const CORE_FIELDS = (body: Record<string, unknown>) => ({
+  title:              body.title              ?? '',
+  slug:               body.slug               ?? '',
+  excerpt:            body.excerpt             ?? '',
+  content:            body.content             ?? '',
+  author:             body.author              ?? 'FastSEO',
+  date:               body.date               ?? new Date().toISOString().split('T')[0],
+  categories:         body.categories          ?? [],
+  featured_image_url: body.featured_image_url  ?? '',
+  status:             body.status              ?? 'draft',
+});
+
+const SEO_FIELDS = (body: Record<string, unknown>) => ({
+  focus_keyword:    body.focus_keyword    ?? '',
+  seo_title:        body.seo_title        ?? '',
+  meta_description: body.meta_description ?? '',
+  canonical_url:    body.canonical_url    ?? '',
+  robots:           body.robots           ?? 'index/follow',
+  og_title:         body.og_title         ?? '',
+  og_description:   body.og_description   ?? '',
+  og_image:         body.og_image         ?? '',
+  schema_type:      body.schema_type      ?? 'BlogPosting',
+});
 
 export async function PUT(
   req: NextRequest,
@@ -54,10 +54,11 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
 
+    // Step 1: update core fields (always safe)
     const { data, error } = await supabaseServer
       .from('blog_posts')
       .update({
-        ...pickFields(body),
+        ...CORE_FIELDS(body),
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
@@ -71,6 +72,15 @@ export async function PUT(
         { status: 500 }
       );
     }
+
+    // Step 2: update SEO fields (graceful — only works once columns exist)
+    await supabaseServer
+      .from('blog_posts')
+      .update({ ...SEO_FIELDS(body), updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .then(({ error: seoError }) => {
+        if (seoError) console.warn('SEO fields not saved (run schema migration):', seoError.message);
+      });
 
     return NextResponse.json(data);
   } catch (error) {
@@ -91,7 +101,6 @@ export async function DELETE(
       .eq('id', id);
 
     if (error) throw error;
-
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Blog delete error:', error);
