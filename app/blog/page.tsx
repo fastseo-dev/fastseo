@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllPosts, formatDate } from "@/lib/blog";
+import { formatDate } from "@/lib/blog";
+import { supabaseServer } from "@/lib/supabase";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "SEO Blog",
@@ -9,8 +12,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://www.fastseosolutions.com/blog/" },
 };
 
-export default function BlogPage() {
-  const posts = getAllPosts();
+export default async function BlogPage() {
+  const { data: posts } = await supabaseServer
+    .from("blog_posts")
+    .select("id, title, slug, excerpt, author, date, categories, featured_image_url, status")
+    .eq("status", "published")
+    .order("date", { ascending: false });
+
+  const list = posts ?? [];
 
   return (
     <div className="min-h-screen bg-void pt-[70px]">
@@ -33,61 +42,73 @@ export default function BlogPage() {
 
       {/* Post grid */}
       <section className="max-w-[1160px] mx-auto px-6 py-16">
-        {posts.length === 0 ? (
+        {list.length === 0 ? (
           <p className="font-body text-text-muted">No posts yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {posts.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}/`}
-                className="group flex flex-col rounded-xl border border-border bg-surface hover:border-border-strong transition-all duration-200 overflow-hidden"
-              >
-                {/* Card accent bar */}
-                <div className="h-[3px] bg-gradient-to-r from-lime/60 via-mint/40 to-transparent" />
+            {list.map((post) => {
+              const categories: string[] = Array.isArray(post.categories) ? post.categories : [];
+              return (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}/`}
+                  className="group flex flex-col rounded-xl border border-border bg-surface hover:border-border-strong transition-all duration-200 overflow-hidden"
+                >
+                  {/* Card accent bar */}
+                  <div className="h-[3px] bg-gradient-to-r from-lime/60 via-mint/40 to-transparent" />
 
-                <div className="flex flex-col flex-1 p-6">
-                  {/* Categories */}
-                  {post.categories.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {post.categories.slice(0, 2).map((cat) => (
-                        <span
-                          key={cat}
-                          className="font-body text-[10px] font-semibold tracking-wide uppercase text-lime/70 bg-lime/8 border border-lime/15 rounded-full px-2 py-0.5"
-                        >
-                          {cat}
-                        </span>
-                      ))}
+                  {/* Featured image */}
+                  {post.featured_image_url && (
+                    <img
+                      src={post.featured_image_url}
+                      alt={post.title}
+                      className="w-full h-44 object-cover"
+                    />
+                  )}
+
+                  <div className="flex flex-col flex-1 p-6">
+                    {/* Categories */}
+                    {categories.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {categories.slice(0, 2).map((cat) => (
+                          <span
+                            key={cat}
+                            className="font-body text-[10px] font-semibold tracking-wide uppercase text-lime/70 bg-lime/8 border border-lime/15 rounded-full px-2 py-0.5"
+                          >
+                            {cat}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Title */}
+                    <h2 className="font-display font-bold text-[16px] text-text-primary leading-snug mb-3 group-hover:text-lime transition-colors line-clamp-3">
+                      {post.title}
+                    </h2>
+
+                    {/* Excerpt */}
+                    {post.excerpt && (
+                      <p className="font-body text-[13px] text-text-muted leading-relaxed line-clamp-3 mb-4">
+                        {post.excerpt}
+                      </p>
+                    )}
+
+                    {/* Footer */}
+                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-border-subtle">
+                      <span className="font-body text-[12px] text-text-faint">
+                        {formatDate(post.date)}
+                      </span>
+                      <span className="font-body text-[12px] text-lime/70 group-hover:text-lime transition-colors flex items-center gap-1">
+                        Read
+                        <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
+                          <path d="M2.5 10.5l8-8M10.5 2.5H4.5M10.5 2.5v6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
                     </div>
-                  )}
-
-                  {/* Title */}
-                  <h2 className="font-display font-bold text-[16px] text-text-primary leading-snug mb-3 group-hover:text-lime transition-colors line-clamp-3">
-                    {post.title}
-                  </h2>
-
-                  {/* Excerpt */}
-                  {post.excerpt && (
-                    <p className="font-body text-[13px] text-text-muted leading-relaxed line-clamp-3 mb-4">
-                      {post.excerpt}
-                    </p>
-                  )}
-
-                  {/* Footer */}
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-border-subtle">
-                    <span className="font-body text-[12px] text-text-faint">
-                      {formatDate(post.date)}
-                    </span>
-                    <span className="font-body text-[12px] text-lime/70 group-hover:text-lime transition-colors flex items-center gap-1">
-                      Read
-                      <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
-                        <path d="M2.5 10.5l8-8M10.5 2.5H4.5M10.5 2.5v6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         )}
       </section>
