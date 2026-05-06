@@ -16,31 +16,28 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Absolute minimum — only title + slug guaranteed at table creation
-const MIN_FIELDS = (body: Record<string, unknown>) => ({
-  title: body.title ?? '',
-  slug:  body.slug  ?? '',
-});
-
-// Extended fields added in migration — saved after core insert succeeds
-const EXT_FIELDS = (body: Record<string, unknown>) => ({
-  content:            body.content             ?? '',
-  status:             body.status              ?? 'draft',
-  excerpt:            body.excerpt             ?? '',
-  author:             body.author              ?? 'FastSEO',
-  date:               body.date               ?? new Date().toISOString().split('T')[0],
-  categories:         body.categories          ?? [],
-  featured_image_url: body.featured_image_url  ?? '',
-  focus_keyword:      body.focus_keyword       ?? '',
-  seo_title:          body.seo_title           ?? '',
-  meta_description:   body.meta_description    ?? '',
-  canonical_url:      body.canonical_url       ?? '',
-  robots:             body.robots              ?? 'index/follow',
-  og_title:           body.og_title            ?? '',
-  og_description:     body.og_description      ?? '',
-  og_image:           body.og_image            ?? '',
-  schema_type:        body.schema_type         ?? 'BlogPosting',
-});
+function pickFields(body: Record<string, unknown>) {
+  return {
+    title:              body.title              ?? '',
+    slug:               body.slug               ?? '',
+    excerpt:            body.excerpt             ?? '',
+    content:            body.content             ?? '',
+    author:             body.author              ?? 'FastSEO',
+    date:               body.date               ?? new Date().toISOString().split('T')[0],
+    categories:         body.categories          ?? [],
+    featured_image_url: body.featured_image_url  ?? '',
+    status:             body.status              ?? 'draft',
+    focus_keyword:      body.focus_keyword       ?? '',
+    seo_title:          body.seo_title           ?? '',
+    meta_description:   body.meta_description    ?? '',
+    canonical_url:      body.canonical_url       ?? '',
+    robots:             body.robots              ?? 'index/follow',
+    og_title:           body.og_title            ?? '',
+    og_description:     body.og_description      ?? '',
+    og_image:           body.og_image            ?? '',
+    schema_type:        body.schema_type         ?? 'BlogPosting',
+  };
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -53,11 +50,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Step 1: insert minimal fields (guaranteed columns)
     const { data, error } = await supabaseServer
       .from('blog_posts')
       .insert([{
-        ...MIN_FIELDS(body),
+        ...pickFields(body),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       }])
@@ -71,15 +67,6 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
-
-    // Step 2: update extended + SEO fields (silently skipped if columns missing)
-    await supabaseServer
-      .from('blog_posts')
-      .update({ ...EXT_FIELDS(body), updated_at: new Date().toISOString() })
-      .eq('id', data.id)
-      .then(({ error: extError }) => {
-        if (extError) console.warn('Extended fields not saved — run SQL migration:', extError.message);
-      });
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
