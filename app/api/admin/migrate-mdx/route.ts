@@ -63,36 +63,47 @@ export async function POST() {
           ? String(data.date).slice(0, 10)
           : new Date().toISOString().split('T')[0];
 
-        const { error } = await supabaseServer.from('blog_posts').insert([{
-          title:              data.title ?? slug,
-          slug,
+        // Step 1: insert only columns guaranteed to exist
+        const { data: inserted, error } = await supabaseServer
+          .from('blog_posts')
+          .insert([{
+            title:   data.title ?? slug,
+            slug,
+            content: contentHtml,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }])
+          .select('id')
+          .single();
+
+        if (error) {
+          console.error(`Failed to import ${slug}:`, error.message);
+          failed.push({ slug, error: error.message });
+          continue;
+        }
+
+        // Step 2: update optional fields (silently skipped if column missing)
+        await supabaseServer.from('blog_posts').update({
           excerpt,
-          content:            contentHtml,
           author:             data.author ?? 'FastSEO',
           date,
           categories,
           featured_image_url: data.featured_image ?? data.image ?? '',
           status:             'published',
+          schema_type:        'BlogPosting',
+          robots:             'index/follow',
           focus_keyword:      '',
           seo_title:          '',
           meta_description:   '',
           canonical_url:      '',
-          robots:             'index/follow',
           og_title:           '',
           og_description:     '',
           og_image:           '',
-          schema_type:        'BlogPosting',
-          created_at:         new Date().toISOString(),
           updated_at:         new Date().toISOString(),
-        }]);
+        }).eq('id', inserted.id);
 
-        if (error) {
-          console.error(`Failed to import ${slug}:`, error.message);
-          failed.push({ slug, error: error.message });
-        } else {
-          imported.push(slug);
-          existingSlugs.add(slug);
-        }
+        imported.push(slug);
+        existingSlugs.add(slug);
       } catch (fileError) {
         failed.push({ slug: filename, error: String(fileError) });
       }

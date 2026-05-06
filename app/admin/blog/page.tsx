@@ -49,7 +49,8 @@ export default function BlogPage() {
       if (res.ok) {
         const msg = `Found ${data.totalFiles} files → Imported ${data.imported}, Skipped ${data.skipped}, Failed ${data.failed}.`;
         if (data.failed > 0) {
-          toast.error(msg + ' Errors: ' + data.failedDetails.map((f: {slug:string;error:string}) => `${f.slug}: ${f.error}`).join(' | '));
+          const firstError = data.failedDetails?.[0];
+          toast.error(`${msg} First error: ${firstError?.slug}: ${firstError?.error}`);
         } else {
           toast.success(msg);
         }
