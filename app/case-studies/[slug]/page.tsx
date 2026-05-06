@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: study.og_title || title,
       description: study.og_description || description,
-      images: study.og_image ? [study.og_image] : undefined,
+      images: [{ url: study.og_image || study.featured_image_url || 'https://www.fastseosolutions.com/opengraph-image', width: 1200, height: 630, alt: title }],
       type: 'article',
       url: canonical,
     },
@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: study.og_title || title,
       description: study.og_description || description,
-      images: study.og_image ? [study.og_image] : undefined,
+      images: [study.og_image || study.featured_image_url || 'https://www.fastseosolutions.com/opengraph-image'],
     },
   };
 }

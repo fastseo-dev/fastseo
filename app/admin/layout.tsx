@@ -8,6 +8,7 @@ const menuItems = [
   { label: 'Dashboard', href: '/admin' },
   { label: 'Blog Posts', href: '/admin/blog' },
   { label: 'Case Studies', href: '/admin/case-studies' },
+  { label: 'Pages', href: '/admin/pages' },
   { label: 'Settings', href: '/admin/settings' },
   { label: 'Integrations', href: '/admin/integrations' },
   { label: 'Pricing', href: '/admin/pricing' },

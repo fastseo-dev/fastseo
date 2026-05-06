@@ -53,6 +53,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const description = dbPost.meta_description || dbPost.excerpt || undefined;
     const canonical = dbPost.canonical_url || `https://www.fastseosolutions.com/blog/${slug}/`;
     const [robotsIndex, robotsFollow] = (dbPost.robots || "index/follow").split("/");
+    const ogImage =
+      dbPost.og_image ||
+      dbPost.featured_image_url ||
+      "https://www.fastseosolutions.com/opengraph-image";
     return {
       title,
       description,
@@ -61,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       openGraph: {
         title: dbPost.og_title || title,
         description: dbPost.og_description || description,
-        images: dbPost.og_image ? [dbPost.og_image] : undefined,
+        images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
         type: "article",
         url: canonical,
       },
@@ -69,7 +73,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         card: "summary_large_image",
         title: dbPost.og_title || title,
         description: dbPost.og_description || description,
-        images: dbPost.og_image ? [dbPost.og_image] : undefined,
+        images: [ogImage],
       },
     };
   }
