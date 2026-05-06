@@ -5,14 +5,17 @@ export async function GET(req: NextRequest) {
   try {
     const { data, error } = await supabaseServer
       .from('blog_posts')
-      .select('id, title, slug, author, date, status')
+      .select('*')
       .order('date', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Blog fetch error:', JSON.stringify(error));
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
     return NextResponse.json(data || []);
   } catch (error) {
     console.error('Blog fetch error:', error);
-    return NextResponse.json([], { status: 500 });
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
 

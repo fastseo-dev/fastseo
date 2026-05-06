@@ -26,9 +26,11 @@ export default function BlogPage() {
   const fetchPosts = async () => {
     try {
       const res = await fetch('/api/admin/blog');
-      if (res.ok) {
-        const data = await res.json();
-        setPosts(data);
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error('Failed to load posts: ' + (data.error || res.status));
+      } else {
+        setPosts(Array.isArray(data) ? data : []);
       }
     } catch (error) {
       console.error('Failed to fetch blog posts:', error);
