@@ -1,36 +1,118 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllPosts, getPost, formatDate } from "@/lib/blog";
+import { formatDate } from "@/lib/blog";
+import { supabaseServer } from "@/lib/supabase";
+
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }));
+interface SupabasePost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  date: string;
+  categories: string[];
+  featured_image_url: string;
+  status: string;
+  seo_title: string;
+  meta_description: string;
+  focus_keyword: string;
+  canonical_url: string;
+  robots: string;
+  og_title: string;
+  og_description: string;
+  og_image: string;
+  schema_type: string;
+}
+
+async function getSupabasePost(slug: string): Promise<SupabasePost | null> {
+  const { data, error } = await supabaseServer
+    .from('blog_posts')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single();
+
+  if (error || !data) return null;
+  return data as SupabasePost;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const post = await getSupabasePost(slug);
   if (!post) return {};
+
+  const title = post.seo_title || post.title;
+  const description = post.meta_description || post.excerpt || undefined;
+  const canonical = post.canonical_url || `https://www.fastseosolutions.com/blog/${slug}/`;
+
+  const [robotsIndex, robotsFollow] = (post.robots || 'index/follow').split('/');
+
   return {
-    title: post.title,
-    description: post.excerpt || undefined,
-    alternates: {
-      canonical: `https://www.fastseosolutions.com/blog/${slug}/`,
+    title,
+    description,
+    alternates: { canonical },
+    robots: {
+      index: robotsIndex !== 'noindex',
+      follow: robotsFollow !== 'nofollow',
+    },
+    openGraph: {
+      title: post.og_title || title,
+      description: post.og_description || description,
+      images: post.og_image ? [post.og_image] : undefined,
+      type: 'article',
+      url: canonical,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.og_title || title,
+      description: post.og_description || description,
+      images: post.og_image ? [post.og_image] : undefined,
     },
   };
 }
 
+function buildSchema(post: SupabasePost) {
+  if (!post.schema_type || post.schema_type === 'None') return null;
+
+  const base = {
+    '@context': 'https://schema.org',
+    '@type': post.schema_type,
+    headline: post.title,
+    description: post.meta_description || post.excerpt || undefined,
+    author: { '@type': 'Person', name: post.author },
+    datePublished: post.date,
+    url: post.canonical_url || `https://www.fastseosolutions.com/blog/${post.slug}/`,
+    image: post.og_image || post.featured_image_url || undefined,
+  };
+
+  return base;
+}
+
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const post = await getSupabasePost(slug);
   if (!post) notFound();
+
+  const schema = buildSchema(post);
+  const categories: string[] = Array.isArray(post.categories) ? post.categories : [];
 
   return (
     <div className="min-h-screen bg-void pt-[70px]">
+      {schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      )}
+
       <article className="max-w-[780px] mx-auto px-6 py-16">
 
         {/* Back link */}
@@ -45,9 +127,9 @@ export default async function BlogPostPage({ params }: Props) {
         </Link>
 
         {/* Categories */}
-        {post.categories.length > 0 && (
+        {categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {post.categories.map((cat) => (
+            {categories.map((cat) => (
               <span
                 key={cat}
                 className="font-body text-[11px] font-semibold tracking-wide uppercase text-lime/70 bg-lime/8 border border-lime/15 rounded-full px-2.5 py-1"
@@ -84,7 +166,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Post content */}
         <div
           className="prose"
-          dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+          dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
         {/* Footer CTA */}

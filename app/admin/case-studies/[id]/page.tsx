@@ -24,6 +24,26 @@ interface CaseStudy {
   body: string;
   featured_image_url: string;
   status: 'draft' | 'published';
+  // SEO fields
+  focus_keyword: string;
+  seo_title: string;
+  meta_description: string;
+  canonical_url: string;
+  robots: string;
+  og_title: string;
+  og_description: string;
+  og_image: string;
+  schema_type: string;
+}
+
+function CharCount({ value, limit }: { value: string; limit: number }) {
+  const len = value.length;
+  const over = len > limit;
+  return (
+    <span className={`text-xs ml-2 ${over ? 'text-yellow-500 font-semibold' : 'text-gray-400'}`}>
+      {len}/{limit}{over ? ' — too long' : ''}
+    </span>
+  );
 }
 
 export default function CaseStudyEditorPage() {
@@ -44,11 +64,21 @@ export default function CaseStudyEditorPage() {
     body: '',
     featured_image_url: '',
     status: 'draft',
+    focus_keyword: '',
+    seo_title: '',
+    meta_description: '',
+    canonical_url: '',
+    robots: 'index/follow',
+    og_title: '',
+    og_description: '',
+    og_image: '',
+    schema_type: 'Article',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [seoOpen, setSeoOpen] = useState(false);
 
   useEffect(() => {
     if (!isNew && params.id) {
@@ -61,7 +91,18 @@ export default function CaseStudyEditorPage() {
       const res = await fetch(`/api/admin/case-studies/${id}`);
       if (res.ok) {
         const data = await res.json();
-        setStudy(data);
+        setStudy({
+          ...data,
+          focus_keyword: data.focus_keyword ?? '',
+          seo_title: data.seo_title ?? '',
+          meta_description: data.meta_description ?? '',
+          canonical_url: data.canonical_url ?? '',
+          robots: data.robots ?? 'index/follow',
+          og_title: data.og_title ?? '',
+          og_description: data.og_description ?? '',
+          og_image: data.og_image ?? '',
+          schema_type: data.schema_type ?? 'Article',
+        });
       } else {
         toast.error('Failed to load case study');
       }
@@ -136,8 +177,8 @@ export default function CaseStudyEditorPage() {
         {isNew ? 'New Case Study' : 'Edit Case Study'}
       </h1>
 
-      <form onSubmit={handleSubmit} className="max-w-4xl bg-white rounded-lg shadow p-6">
-        <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="max-w-4xl">
+        <div className="bg-white rounded-lg shadow p-6 space-y-6">
           <FormInput
             label="Title"
             name="title"
@@ -240,7 +281,132 @@ export default function CaseStudyEditorPage() {
           </FormField>
         </div>
 
-        <div className="mt-8 flex space-x-3">
+        {/* SEO Settings */}
+        <div className="mt-4 bg-white rounded-lg shadow overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setSeoOpen(!seoOpen)}
+            className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-green-600">
+                <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M5 8h6M8 5v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <span className="font-semibold text-gray-900">SEO Settings</span>
+            </div>
+            <svg
+              width="16" height="16" viewBox="0 0 16 16" fill="none"
+              className={`text-gray-400 transition-transform ${seoOpen ? 'rotate-180' : ''}`}
+            >
+              <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
+          {seoOpen && (
+            <div className="px-6 pb-6 space-y-5 border-t border-gray-100">
+              <p className="text-xs text-gray-500 pt-4">
+                These fields control how this case study appears in Google search results and social media previews.
+              </p>
+
+              <FormInput
+                label="Focus Keyword"
+                name="focus_keyword"
+                value={study.focus_keyword}
+                onChange={(e) => setStudy({ ...study, focus_keyword: e.target.value })}
+                placeholder="e.g. iGaming SEO case study"
+              />
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  SEO Title
+                  <CharCount value={study.seo_title} limit={60} />
+                </label>
+                <input
+                  type="text"
+                  value={study.seo_title}
+                  onChange={(e) => setStudy({ ...study, seo_title: e.target.value })}
+                  placeholder="SEO title (leave blank to use case study title)"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Meta Description
+                  <CharCount value={study.meta_description} limit={160} />
+                </label>
+                <textarea
+                  value={study.meta_description}
+                  onChange={(e) => setStudy({ ...study, meta_description: e.target.value })}
+                  placeholder="Meta description for search results"
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+              </div>
+
+              <FormInput
+                label="Canonical URL"
+                name="canonical_url"
+                value={study.canonical_url}
+                onChange={(e) => setStudy({ ...study, canonical_url: e.target.value })}
+                placeholder="https://www.fastseosolutions.com/case-studies/slug/"
+              />
+
+              <FormField label="Robots">
+                <select
+                  value={study.robots}
+                  onChange={(e) => setStudy({ ...study, robots: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="index/follow">index/follow (default)</option>
+                  <option value="noindex/follow">noindex/follow</option>
+                  <option value="index/nofollow">index/nofollow</option>
+                  <option value="noindex/nofollow">noindex/nofollow</option>
+                </select>
+              </FormField>
+
+              <FormInput
+                label="OG Title"
+                name="og_title"
+                value={study.og_title}
+                onChange={(e) => setStudy({ ...study, og_title: e.target.value })}
+                placeholder="Open Graph title (leave blank to use SEO title)"
+              />
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">OG Description</label>
+                <textarea
+                  value={study.og_description}
+                  onChange={(e) => setStudy({ ...study, og_description: e.target.value })}
+                  placeholder="Open Graph description (leave blank to use meta description)"
+                  rows={2}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+              </div>
+
+              <ImageUpload
+                label="OG Image"
+                value={study.og_image}
+                onChange={(url) => setStudy({ ...study, og_image: url })}
+              />
+
+              <FormField label="Schema Type">
+                <select
+                  value={study.schema_type}
+                  onChange={(e) => setStudy({ ...study, schema_type: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="Article">Article</option>
+                  <option value="CaseStudy">CaseStudy</option>
+                  <option value="None">None</option>
+                </select>
+              </FormField>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 flex space-x-3">
           <button
             type="submit"
             disabled={saving}

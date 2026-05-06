@@ -1,47 +1,213 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { supabaseServer } from "@/lib/supabase";
+
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-function slugToTitle(slug: string) {
-  return slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+interface SupabaseCaseStudy {
+  id: string;
+  title: string;
+  slug: string;
+  niche: string;
+  client: string;
+  result: string;
+  metric: string;
+  period: string;
+  tags: string[];
+  body: string;
+  featured_image_url: string;
+  status: string;
+  seo_title: string;
+  meta_description: string;
+  focus_keyword: string;
+  canonical_url: string;
+  robots: string;
+  og_title: string;
+  og_description: string;
+  og_image: string;
+  schema_type: string;
+}
+
+async function getCaseStudy(slug: string): Promise<SupabaseCaseStudy | null> {
+  const { data, error } = await supabaseServer
+    .from('case_studies')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single();
+
+  if (error || !data) return null;
+  return data as SupabaseCaseStudy;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const study = await getCaseStudy(slug);
+  if (!study) return {};
+
+  const title = study.seo_title || study.title;
+  const description = study.meta_description || undefined;
+  const canonical = study.canonical_url || `https://www.fastseosolutions.com/case-studies/${slug}/`;
+
+  const [robotsIndex, robotsFollow] = (study.robots || 'index/follow').split('/');
+
   return {
-    title: slugToTitle(slug),
-    alternates: {
-      canonical: `https://www.fastseosolutions.com/case-studies/${slug}/`,
+    title,
+    description,
+    alternates: { canonical },
+    robots: {
+      index: robotsIndex !== 'noindex',
+      follow: robotsFollow !== 'nofollow',
+    },
+    openGraph: {
+      title: study.og_title || title,
+      description: study.og_description || description,
+      images: study.og_image ? [study.og_image] : undefined,
+      type: 'article',
+      url: canonical,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: study.og_title || title,
+      description: study.og_description || description,
+      images: study.og_image ? [study.og_image] : undefined,
+    },
+  };
+}
+
+function buildSchema(study: SupabaseCaseStudy) {
+  if (!study.schema_type || study.schema_type === 'None') return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': study.schema_type,
+    name: study.title,
+    description: study.meta_description || undefined,
+    url: study.canonical_url || `https://www.fastseosolutions.com/case-studies/${study.slug}/`,
+    image: study.og_image || study.featured_image_url || undefined,
+    provider: {
+      '@type': 'Organization',
+      name: 'FastSEO',
+      url: 'https://www.fastseosolutions.com',
     },
   };
 }
 
 export default async function CaseStudySlugPage({ params }: Props) {
   const { slug } = await params;
+  const study = await getCaseStudy(slug);
+  if (!study) notFound();
+
+  const schema = buildSchema(study);
+  const tags: string[] = Array.isArray(study.tags) ? study.tags : [];
+
   return (
     <div className="min-h-screen bg-void pt-[70px]">
-      <div className="max-w-[780px] mx-auto px-6 py-24">
+      {schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      )}
+
+      <article className="max-w-[780px] mx-auto px-6 py-16">
+
+        {/* Back link */}
+        <Link
+          href="/case-studies/"
+          className="inline-flex items-center gap-1.5 font-body text-[13px] text-text-muted hover:text-text-primary transition-colors mb-10"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Back to Case Studies
+        </Link>
+
+        {/* Niche badge */}
         <span className="inline-flex items-center gap-2 text-lime font-body font-semibold text-[11px] tracking-[0.12em] uppercase mb-4">
           <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
-          Case Studies
+          {study.niche}
         </span>
-        <h1 className="font-display font-black text-[44px] leading-[1.1] tracking-[-1px] text-text-primary mb-6">
-          {slugToTitle(slug)}
+
+        {/* Title */}
+        <h1 className="font-display font-black text-[40px] lg:text-[48px] leading-[1.1] tracking-[-1px] text-text-primary mb-5">
+          {study.title}
         </h1>
-        <p className="font-body text-[17px] text-text-muted leading-relaxed">
-          Full case study coming soon.
-        </p>
-        <div className="mt-8">
-          <a
-            href="/case-studies/"
-            className="font-body text-[14px] text-text-muted hover:text-text-primary transition-colors"
+
+        {/* Stats bar */}
+        {(study.result || study.metric || study.period) && (
+          <div className="flex flex-wrap gap-6 py-6 mb-8 border-y border-border">
+            {study.result && (
+              <div>
+                <div className="font-display font-black text-[28px] text-lime leading-none">
+                  {study.result}
+                </div>
+                {study.metric && (
+                  <div className="font-body text-[12px] text-text-muted mt-1">{study.metric}</div>
+                )}
+              </div>
+            )}
+            {study.period && (
+              <div>
+                <div className="font-display font-black text-[28px] text-text-primary leading-none">
+                  {study.period}
+                </div>
+                <div className="font-body text-[12px] text-text-muted mt-1">Time period</div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Client */}
+        {study.client && (
+          <p className="font-body text-[15px] text-text-muted leading-relaxed mb-8">
+            {study.client}
+          </p>
+        )}
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-10">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="font-body text-[11px] font-semibold tracking-wide uppercase text-lime/70 bg-lime/8 border border-lime/15 rounded-full px-2.5 py-1"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Body content */}
+        {study.body && (
+          <div
+            className="prose"
+            dangerouslySetInnerHTML={{ __html: study.body }}
+          />
+        )}
+
+        {/* Footer CTA */}
+        <div className="mt-16 pt-10 border-t border-border">
+          <p className="font-body text-[14px] text-text-muted mb-4">
+            Want results like this for your business?
+          </p>
+          <Link
+            href="/contact/"
+            className="inline-flex items-center gap-1.5 bg-lime text-void font-display font-bold text-[14px] px-6 py-3.5 rounded-lg hover:bg-[#F0FF6B] hover:shadow-[0_0_20px_rgba(232,255,71,0.3)] transition-all"
           >
-            ← Back to Case Studies
-          </a>
+            Get a Free Audit
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <path d="M2.5 10.5l8-8M10.5 2.5H4.5M10.5 2.5v6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </Link>
         </div>
-      </div>
+      </article>
     </div>
   );
 }
