@@ -158,11 +158,14 @@ export default function BlogEditorPage() {
         toast.success('Post saved successfully');
         router.push('/admin/blog');
       } else {
-        toast.error('Failed to save post');
+        const err = await res.json().catch(() => ({}));
+        const msg = err.error || err.message || 'Failed to save post';
+        toast.error(msg);
+        console.error('Save error:', err);
       }
     } catch (error) {
       console.error('Error saving post:', error);
-      toast.error('Error saving post');
+      toast.error(String(error));
     } finally {
       setSaving(false);
     }
