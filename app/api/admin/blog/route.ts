@@ -17,6 +17,30 @@ export async function GET(req: NextRequest) {
   }
 }
 
+function pickFields(body: Record<string, unknown>) {
+  return {
+    title:              body.title              ?? '',
+    slug:               body.slug               ?? '',
+    excerpt:            body.excerpt             ?? '',
+    content:            body.content             ?? '',
+    author:             body.author              ?? 'FastSEO',
+    date:               body.date               ?? new Date().toISOString().split('T')[0],
+    categories:         body.categories          ?? [],
+    featured_image_url: body.featured_image_url  ?? '',
+    status:             body.status              ?? 'draft',
+    // SEO fields
+    focus_keyword:      body.focus_keyword       ?? '',
+    seo_title:          body.seo_title           ?? '',
+    meta_description:   body.meta_description    ?? '',
+    canonical_url:      body.canonical_url       ?? '',
+    robots:             body.robots              ?? 'index/follow',
+    og_title:           body.og_title            ?? '',
+    og_description:     body.og_description      ?? '',
+    og_image:           body.og_image            ?? '',
+    schema_type:        body.schema_type         ?? 'BlogPosting',
+  };
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -25,12 +49,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields: title, slug, content' }, { status: 400 });
     }
 
-    const { id: _discard, ...fields } = body;
-
     const { data, error } = await supabaseServer
       .from('blog_posts')
       .insert([{
-        ...fields,
+        ...pickFields(body),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       }])

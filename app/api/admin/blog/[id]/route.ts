@@ -23,6 +23,29 @@ export async function GET(
   }
 }
 
+function pickFields(body: Record<string, unknown>) {
+  return {
+    title:              body.title              ?? '',
+    slug:               body.slug               ?? '',
+    excerpt:            body.excerpt             ?? '',
+    content:            body.content             ?? '',
+    author:             body.author              ?? 'FastSEO',
+    date:               body.date               ?? new Date().toISOString().split('T')[0],
+    categories:         body.categories          ?? [],
+    featured_image_url: body.featured_image_url  ?? '',
+    status:             body.status              ?? 'draft',
+    focus_keyword:      body.focus_keyword       ?? '',
+    seo_title:          body.seo_title           ?? '',
+    meta_description:   body.meta_description    ?? '',
+    canonical_url:      body.canonical_url       ?? '',
+    robots:             body.robots              ?? 'index/follow',
+    og_title:           body.og_title            ?? '',
+    og_description:     body.og_description      ?? '',
+    og_image:           body.og_image            ?? '',
+    schema_type:        body.schema_type         ?? 'BlogPosting',
+  };
+}
+
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -34,19 +57,25 @@ export async function PUT(
     const { data, error } = await supabaseServer
       .from('blog_posts')
       .update({
-        ...body,
+        ...pickFields(body),
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase update error:', JSON.stringify(error));
+      return NextResponse.json(
+        { error: error.message, details: error.details, hint: error.hint, code: error.code },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(data);
   } catch (error) {
     console.error('Blog update error:', error);
-    return NextResponse.json({ error: 'Failed to update' }, { status: 500 });
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }
 
