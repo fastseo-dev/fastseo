@@ -111,7 +111,7 @@ export function RichTextEditor({
 
         <EditorContent
           editor={editor}
-          className="border border-gray-300 rounded-lg p-3 min-h-80 focus-within:ring-2 focus-within:ring-blue-500"
+          className="border border-gray-300 rounded-lg p-3 min-h-80 focus-within:ring-2 focus-within:ring-blue-500 bg-white text-gray-900"
         />
       </div>
     </FormField>

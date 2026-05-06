@@ -20,7 +20,8 @@
       "Bash(git commit *)",
       "Bash(npm install *)",
       "Bash(find C:\\\\\\\\Users\\\\\\\\Lovelesh\\\\\\\\fastseo -type f \\\\\\( -name \"page.tsx\" -path \"*/admin/*\" -o -name \"*.ts\" -path \"*/api/admin/*\" \\\\\\))",
-      "Bash(ls *)"
+      "Bash(ls *)",
+      "Bash(git push *)"
     ]
   }
 }

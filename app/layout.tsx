@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { PublicLayout } from "@/components/PublicLayout";
 import { supabaseServer } from "@/lib/supabase";
 
 const outfit = Outfit({
@@ -144,9 +143,7 @@ gtag('config','${gaId}');
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
 
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <PublicLayout>{children}</PublicLayout>
 
         {/* Custom body scripts from admin */}
         {integrations.bodyScripts && (
