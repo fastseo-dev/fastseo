@@ -13,25 +13,26 @@ interface ImageUploadProps {
 
 export function ImageUpload({ label, value, onChange, error, required }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(value);
+  const [uploadError, setUploadError] = useState('');
+  const [tab, setTab] = useState<'upload' | 'url'>('upload');
+  const [urlInput, setUrlInput] = useState(value || '');
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
+      setUploadError('Please select an image file');
       return;
     }
-
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB');
+      setUploadError('File size must be less than 5MB');
       return;
     }
 
+    setUploadError('');
     setUploading(true);
+
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -41,56 +42,110 @@ export function ImageUpload({ label, value, onChange, error, required }: ImageUp
         body: formData,
       });
 
-      if (!res.ok) throw new Error('Upload failed');
+      const json = await res.json();
 
-      const { url } = await res.json();
-      setPreviewUrl(url);
-      onChange(url);
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert('Failed to upload image');
+      if (!res.ok) {
+        throw new Error(json.error || `Upload failed (${res.status})`);
+      }
+
+      onChange(json.url);
+      setUrlInput(json.url);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Upload failed';
+      setUploadError(message + ' — try the URL tab instead');
     } finally {
       setUploading(false);
     }
   };
 
+  const handleUrlApply = () => {
+    onChange(urlInput.trim());
+  };
+
+  const handleRemove = () => {
+    onChange('');
+    setUrlInput('');
+  };
+
   return (
     <FormField label={label} error={error} required={required}>
       <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleUpload}
-            disabled={uploading}
-            className="block w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-lg file:border-0
-              file:text-sm file:font-medium
-              file:bg-blue-600 file:text-white
-              hover:file:bg-blue-700
-              disabled:opacity-50"
-          />
-          {uploading && <span className="text-sm text-gray-500">Uploading...</span>}
+        {/* Tabs */}
+        <div className="flex border border-gray-200 rounded-lg overflow-hidden w-fit">
+          <button
+            type="button"
+            onClick={() => setTab('upload')}
+            className={`px-3 py-1.5 text-xs font-medium transition ${
+              tab === 'upload' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            Upload File
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab('url')}
+            className={`px-3 py-1.5 text-xs font-medium transition ${
+              tab === 'url' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            Paste URL
+          </button>
         </div>
 
-        {previewUrl && (
+        {tab === 'upload' ? (
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleUpload}
+              disabled={uploading}
+              className="block w-full text-sm text-gray-700
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-lg file:border-0
+                file:text-sm file:font-medium
+                file:bg-blue-600 file:text-white
+                hover:file:bg-blue-700
+                disabled:opacity-50"
+            />
+            {uploading && <p className="text-sm text-blue-600 mt-1">Uploading...</p>}
+            {uploadError && <p className="text-sm text-red-500 mt-1">{uploadError}</p>}
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              placeholder="https://example.com/image.jpg"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              onClick={handleUrlApply}
+              className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition"
+            >
+              Apply
+            </button>
+          </div>
+        )}
+
+        {/* Preview */}
+        {value && (
           <div className="relative group">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={previewUrl}
+              src={value}
               alt="Preview"
               className="w-full h-48 object-cover rounded-lg border border-gray-300"
             />
             <button
               type="button"
-              onClick={() => {
-                setPreviewUrl('');
-                onChange('');
-              }}
+              onClick={handleRemove}
               className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition"
             >
               Remove
             </button>
+            <p className="text-[11px] text-gray-400 mt-1 truncate">{value}</p>
           </div>
         )}
       </div>

@@ -255,7 +255,7 @@ export default function BlogEditorPage() {
             <select
               value={post.status}
               onChange={(e) => setPost({ ...post, status: e.target.value as 'draft' | 'published' })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>
@@ -309,7 +309,7 @@ export default function BlogEditorPage() {
                   value={post.seo_title}
                   onChange={(e) => setPost({ ...post, seo_title: e.target.value })}
                   placeholder="SEO title (leave blank to use post title)"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                 />
               </div>
 
@@ -339,7 +339,7 @@ export default function BlogEditorPage() {
                 <select
                   value={post.robots}
                   onChange={(e) => setPost({ ...post, robots: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                 >
                   <option value="index/follow">index/follow (default)</option>
                   <option value="noindex/follow">noindex/follow</option>
@@ -377,7 +377,7 @@ export default function BlogEditorPage() {
                 <select
                   value={post.schema_type}
                   onChange={(e) => setPost({ ...post, schema_type: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                 >
                   <option value="BlogPosting">BlogPosting</option>
                   <option value="Article">Article</option>

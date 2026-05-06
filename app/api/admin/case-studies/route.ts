@@ -29,10 +29,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const { id: _discard, ...fields } = body;
     const { data, error } = await supabaseServer
       .from('case_studies')
       .insert([{
-        ...body,
+        ...fields,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       }])

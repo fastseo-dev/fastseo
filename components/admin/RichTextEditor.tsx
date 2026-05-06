@@ -1,9 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useEditor, EditorContent, Editor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Link from '@tiptap/extension-link';
+import { useRef } from 'react';
 import { FormField } from './FormField';
 
 interface RichTextEditorProps {
@@ -16,6 +13,21 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
+const TOOLBAR_ACTIONS = [
+  { label: 'H2', wrap: ['<h2>', '</h2>'] },
+  { label: 'H3', wrap: ['<h3>', '</h3>'] },
+  { label: 'Bold', wrap: ['<strong>', '</strong>'] },
+  { label: 'Italic', wrap: ['<em>', '</em>'] },
+  { label: 'Link', wrap: ['<a href="URL">', '</a>'] },
+  { label: 'UL', wrap: ['<ul>\n  <li>', '</li>\n</ul>'] },
+  { label: 'OL', wrap: ['<ol>\n  <li>', '</li>\n</ol>'] },
+  { label: 'LI', wrap: ['<li>', '</li>'] },
+  { label: 'Para', wrap: ['<p>', '</p>'] },
+  { label: 'Img', wrap: ['<img src="', '" alt="" />', true] },
+  { label: 'HR', insert: '<hr />\n' },
+  { label: 'BR', insert: '<br />\n' },
+];
+
 export function RichTextEditor({
   label,
   value,
@@ -25,93 +37,64 @@ export function RichTextEditor({
   required,
   placeholder,
 }: RichTextEditorProps) {
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: { levels: [1, 2, 3] },
-      }),
-      Link.configure({ openOnClick: false }),
-    ],
-    content: value || '',
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-    onBlur: onBlur,
-  });
+  const ref = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    if (editor && value && editor.getHTML() !== value) {
-      editor.commands.setContent(value);
+  const insertAt = (action: typeof TOOLBAR_ACTIONS[number]) => {
+    const ta = ref.current;
+    if (!ta) return;
+
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = value.slice(start, end);
+    let newValue: string;
+    let cursor: number;
+
+    if ('insert' in action && action.insert) {
+      newValue = value.slice(0, start) + action.insert + value.slice(end);
+      cursor = start + action.insert.length;
+    } else if ('wrap' in action) {
+      const [open, close] = action.wrap as string[];
+      newValue = value.slice(0, start) + open + selected + close + value.slice(end);
+      cursor = start + open.length + selected.length + close.length;
+    } else {
+      return;
     }
-  }, [value, editor]);
 
-  if (!editor) {
-    return (
-      <FormField label={label} error={error} required={required}>
-        <div className="border border-gray-300 rounded-lg p-3 min-h-80 bg-gray-50">
-          <p className="text-gray-400">Loading editor...</p>
-        </div>
-      </FormField>
-    );
-  }
+    onChange(newValue);
+    requestAnimationFrame(() => {
+      ta.focus();
+      ta.setSelectionRange(cursor, cursor);
+    });
+  };
 
   return (
     <FormField label={label} error={error} required={required}>
-      <div className="space-y-2">
-        <div className="flex gap-1 flex-wrap bg-gray-100 p-2 rounded-lg border border-gray-300">
-          <button
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            disabled={!editor.can().chain().focus().toggleBold().run()}
-            className={`px-3 py-1 rounded text-sm font-medium transition ${
-              editor.isActive('bold') ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            Bold
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            disabled={!editor.can().chain().focus().toggleItalic().run()}
-            className={`px-3 py-1 rounded text-sm font-medium transition ${
-              editor.isActive('italic') ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            Italic
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-            className={`px-3 py-1 rounded text-sm font-medium transition ${
-              editor.isActive('heading', { level: 2 }) ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            H2
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`px-3 py-1 rounded text-sm font-medium transition ${
-              editor.isActive('bulletList') ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            List
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-            className={`px-3 py-1 rounded text-sm font-medium transition ${
-              editor.isActive('codeBlock') ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            Code
-          </button>
-          <button
-            onClick={() => editor.chain().focus().clearNodes().run()}
-            className="px-3 py-1 rounded text-sm font-medium bg-white text-gray-700 hover:bg-gray-50 transition"
-          >
-            Clear
-          </button>
+      <div className="space-y-0 border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
+        {/* Toolbar */}
+        <div className="flex flex-wrap gap-1 bg-gray-50 border-b border-gray-200 p-2">
+          {TOOLBAR_ACTIONS.map((action) => (
+            <button
+              key={action.label}
+              type="button"
+              onClick={() => insertAt(action)}
+              className="px-2.5 py-1 rounded text-xs font-semibold bg-white border border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition"
+            >
+              {action.label}
+            </button>
+          ))}
+          <span className="ml-auto text-[11px] text-gray-400 self-center pr-1">HTML editor</span>
         </div>
 
-        <EditorContent
-          editor={editor}
-          className="border border-gray-300 rounded-lg p-3 min-h-80 focus-within:ring-2 focus-within:ring-blue-500 bg-white text-gray-900"
+        {/* Textarea */}
+        <textarea
+          ref={ref}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          placeholder={placeholder || '<p>Write your content here using HTML tags...</p>'}
+          rows={20}
+          className="w-full px-4 py-3 font-mono text-sm text-gray-900 bg-white resize-y focus:outline-none leading-relaxed"
+          spellCheck={false}
         />
       </div>
     </FormField>

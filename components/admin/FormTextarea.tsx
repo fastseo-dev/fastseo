@@ -38,7 +38,7 @@ export function FormTextarea({
         disabled={disabled}
         rows={rows}
         maxLength={maxLength}
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm disabled:opacity-50"
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm disabled:opacity-50 text-gray-900 bg-white"
       />
     </FormField>
   );
