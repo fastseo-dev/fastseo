@@ -9,6 +9,23 @@ import remarkHtml from 'remark-html';
 
 const POSTS_DIR = path.join(process.cwd(), 'content/blog');
 
+function parseDate(raw: unknown): string {
+  if (!raw) return new Date().toISOString().split('T')[0];
+  // gray-matter may return a JS Date object for YAML dates
+  if (raw instanceof Date) {
+    if (!isNaN(raw.getTime())) return raw.toISOString().split('T')[0];
+    return new Date().toISOString().split('T')[0];
+  }
+  const str = String(raw).trim();
+  // Already YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+  // Try JS Date parser — handles most human-readable formats
+  const d = new Date(str);
+  if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
+  // Unparseable — fall back to today
+  return new Date().toISOString().split('T')[0];
+}
+
 const EXCLUDED = new Set([
   'elementor-6775',
   'bulk-sms-service-providers-in-india',
@@ -59,17 +76,16 @@ export async function POST() {
             ?.slice(0, 200) ?? '';
 
         const categories = Array.isArray(data.categories) ? data.categories : [];
-        const date = data.date
-          ? String(data.date).slice(0, 10)
-          : new Date().toISOString().split('T')[0];
+        const date = parseDate(data.date);
 
-        // Step 1: insert only columns guaranteed to exist
+        // Step 1: insert core fields — title, slug, content, date are safe columns
         const { data: inserted, error } = await supabaseServer
           .from('blog_posts')
           .insert([{
             title:   data.title ?? slug,
             slug,
             content: contentHtml,
+            date,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           }])
@@ -82,11 +98,10 @@ export async function POST() {
           continue;
         }
 
-        // Step 2: update optional fields (silently skipped if column missing)
+        // Step 2: update all optional fields (silently ignored if column missing)
         await supabaseServer.from('blog_posts').update({
           excerpt,
           author:             data.author ?? 'FastSEO',
-          date,
           categories,
           featured_image_url: data.featured_image ?? data.image ?? '',
           status:             'published',
