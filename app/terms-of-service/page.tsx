@@ -114,7 +114,7 @@ export default function TermsOfServicePage() {
           <h2>10. Contact</h2>
           <p>
             For any questions regarding these Terms of Service, contact us at:{" "}
-            <a href="mailto:hello@fastseosolutions.com">hello@fastseosolutions.com</a>.
+            <a href="mailto:seo@fastseosolutions.com">seo@fastseosolutions.com</a>.
           </p>
         </div>
       </div>

@@ -129,14 +129,14 @@ export default function Footer() {
               {/* Email */}
               <li>
                 <a
-                  href="mailto:hello@fastseosolutions.com"
+                  href="mailto:seo@fastseosolutions.com"
                   className="group flex items-start gap-2.5 font-body text-[13px] text-text-faint hover:text-lime transition-colors"
                 >
                   <svg className="mt-[1px] shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <rect x="1" y="3" width="12" height="8.5" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
                     <path d="M1 5l6 3.5L13 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
                   </svg>
-                  hello@fastseosolutions.com
+                  seo@fastseosolutions.com
                 </a>
               </li>
 

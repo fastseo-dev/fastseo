@@ -21,10 +21,10 @@ export default function NotFound() {
             The page you are looking for does not exist or has been moved.
             If you followed a link from somewhere, let us know at{" "}
             <a
-              href="mailto:hello@fastseosolutions.com"
+              href="mailto:seo@fastseosolutions.com"
               className="text-lime hover:underline"
             >
-              hello@fastseosolutions.com
+              seo@fastseosolutions.com
             </a>
             .
           </p>

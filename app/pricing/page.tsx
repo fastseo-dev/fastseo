@@ -379,10 +379,10 @@ export default function PricingPage() {
                 </svg>
               </Link>
               <a
-                href="mailto:hello@fastseosolutions.com"
+                href="mailto:seo@fastseosolutions.com"
                 className="text-center font-body text-[13px] text-text-muted hover:text-lime transition-colors"
               >
-                hello@fastseosolutions.com
+                seo@fastseosolutions.com
               </a>
             </div>
           </div>

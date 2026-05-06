@@ -16,7 +16,7 @@ const contactSchema = {
   mainEntity: {
     "@type": "Organization",
     name: "FastSEO",
-    email: "hello@fastseosolutions.com",
+    email: "seo@fastseosolutions.com",
     url: "https://www.fastseosolutions.com",
   },
 };
@@ -72,7 +72,7 @@ export default function ContactPage() {
             {/* Contact card */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-[720px]">
               <a
-                href="mailto:hello@fastseosolutions.com"
+                href="mailto:seo@fastseosolutions.com"
                 className="group flex items-start gap-4 rounded-xl border border-border bg-surface p-6 hover:border-lime/40 transition-all"
               >
                 <div className="w-10 h-10 rounded-lg bg-lime/10 border border-lime/20 flex items-center justify-center shrink-0 mt-0.5">
@@ -86,7 +86,7 @@ export default function ContactPage() {
                     Email Us
                   </div>
                   <div className="font-body text-[13px] text-text-muted break-all">
-                    hello@fastseosolutions.com
+                    seo@fastseosolutions.com
                   </div>
                   <div className="font-body text-[11px] text-text-faint mt-1">
                     Replies within 24 hours
@@ -170,7 +170,7 @@ export default function ContactPage() {
             </div>
             <p className="font-body text-[14px] text-text-muted mt-8 leading-relaxed">
               Not sure if we cover your niche?{" "}
-              <a href="mailto:hello@fastseosolutions.com" className="text-lime hover:underline">
+              <a href="mailto:seo@fastseosolutions.com" className="text-lime hover:underline">
                 Email us
               </a>{" "}
               — if we can help, we will tell you honestly. If we cannot, we will tell you that too.
@@ -187,13 +187,13 @@ export default function ContactPage() {
               </h2>
               <p className="font-body text-[14px] text-text-muted">
                 Email us at{" "}
-                <a href="mailto:hello@fastseosolutions.com" className="text-lime hover:underline">
-                  hello@fastseosolutions.com
+                <a href="mailto:seo@fastseosolutions.com" className="text-lime hover:underline">
+                  seo@fastseosolutions.com
                 </a>
               </p>
             </div>
             <a
-              href="mailto:hello@fastseosolutions.com"
+              href="mailto:seo@fastseosolutions.com"
               className="shrink-0 inline-flex items-center gap-1.5 bg-lime text-void font-display font-bold text-[14px] px-6 py-3.5 rounded-lg hover:bg-[#F0FF6B] hover:shadow-[0_0_20px_rgba(232,255,71,0.3)] transition-all"
             >
               Email Us Now

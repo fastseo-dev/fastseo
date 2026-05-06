@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
         .from('site_settings')
         .insert([{
           site_name: 'FastSEO',
-          email: 'hello@fastseosolutions.com',
+          email: 'seo@fastseosolutions.com',
           accepting_clients: true,
         }])
         .select()

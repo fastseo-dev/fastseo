@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
             search engine optimisation services. Our website is{" "}
             <a href="https://www.fastseosolutions.com">www.fastseosolutions.com</a>. You can contact
             us at{" "}
-            <a href="mailto:hello@fastseosolutions.com">hello@fastseosolutions.com</a>.
+            <a href="mailto:seo@fastseosolutions.com">seo@fastseosolutions.com</a>.
           </p>
 
           <h2>2. Information We Collect</h2>
@@ -101,7 +101,7 @@ export default function PrivacyPolicyPage() {
           </ul>
           <p>
             To exercise any of these rights, email us at{" "}
-            <a href="mailto:hello@fastseosolutions.com">hello@fastseosolutions.com</a>.
+            <a href="mailto:seo@fastseosolutions.com">seo@fastseosolutions.com</a>.
           </p>
 
           <h2>8. Data Security</h2>
@@ -127,7 +127,7 @@ export default function PrivacyPolicyPage() {
           <h2>11. Contact</h2>
           <p>
             For any privacy-related questions or to exercise your data rights, contact us at:{" "}
-            <a href="mailto:hello@fastseosolutions.com">hello@fastseosolutions.com</a>.
+            <a href="mailto:seo@fastseosolutions.com">seo@fastseosolutions.com</a>.
           </p>
         </div>
       </div>

@@ -47,7 +47,7 @@ const orgSchema = {
   description: "Specialist SEO agency for iGaming, cryptocurrency, adult, cannabis, dental and SaaS industries.",
   contactPoint: {
     "@type": "ContactPoint",
-    email: "hello@fastseosolutions.com",
+    email: "seo@fastseosolutions.com",
     contactType: "customer service",
     availableLanguage: "English",
   },
