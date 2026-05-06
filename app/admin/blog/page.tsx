@@ -17,6 +17,7 @@ export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [migrating, setMigrating] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -34,6 +35,25 @@ export default function BlogPage() {
       toast.error('Error loading blog posts');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleMigrate = async () => {
+    if (!confirm('Import all MDX blog posts into Supabase? Already-imported posts will be skipped.')) return;
+    setMigrating(true);
+    try {
+      const res = await fetch('/api/admin/migrate-mdx', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(`Imported ${data.imported} posts. Skipped ${data.skipped}. Failed ${data.failed}.`);
+        if (data.imported > 0) fetchPosts();
+      } else {
+        toast.error(data.error || 'Migration failed');
+      }
+    } catch (error) {
+      toast.error('Migration error: ' + String(error));
+    } finally {
+      setMigrating(false);
     }
   };
 
@@ -61,12 +81,21 @@ export default function BlogPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Blog Posts</h1>
-        <Link
-          href="/admin/blog/new"
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          + New Post
-        </Link>
+        <div className="flex gap-3">
+          <button
+            onClick={handleMigrate}
+            disabled={migrating}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 text-sm font-medium"
+          >
+            {migrating ? 'Importing...' : '⬇ Import MDX Posts'}
+          </button>
+          <Link
+            href="/admin/blog/new"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+          >
+            + New Post
+          </Link>
+        </div>
       </div>
 
       {loading ? (
