@@ -47,7 +47,12 @@ export default function BlogPage() {
       const res = await fetch('/api/admin/migrate-mdx', { method: 'POST' });
       const data = await res.json();
       if (res.ok) {
-        toast.success(`Imported ${data.imported} posts. Skipped ${data.skipped}. Failed ${data.failed}.`);
+        const msg = `Found ${data.totalFiles} files → Imported ${data.imported}, Skipped ${data.skipped}, Failed ${data.failed}.`;
+        if (data.failed > 0) {
+          toast.error(msg + ' Errors: ' + data.failedDetails.map((f: {slug:string;error:string}) => `${f.slug}: ${f.error}`).join(' | '));
+        } else {
+          toast.success(msg);
+        }
         if (data.imported > 0) fetchPosts();
       } else {
         toast.error(data.error || 'Migration failed');

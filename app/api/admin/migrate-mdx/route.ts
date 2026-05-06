@@ -26,90 +26,85 @@ export async function POST() {
       .select('slug');
     const existingSlugs = new Set((existing ?? []).map((p: { slug: string }) => p.slug));
 
-    const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith('.mdx'));
+    const allFiles = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith('.mdx'));
 
     const imported: string[] = [];
     const skipped: string[] = [];
     const failed: { slug: string; error: string }[] = [];
 
-    for (const filename of files) {
-      const raw = fs.readFileSync(path.join(POSTS_DIR, filename), 'utf8');
-      const { data, content } = matter(raw);
-      const slug: string = data.slug ?? filename.replace(/\.mdx$/, '');
+    for (const filename of allFiles) {
+      try {
+        const raw = fs.readFileSync(path.join(POSTS_DIR, filename), 'utf8');
+        const { data, content } = matter(raw);
+        const slug: string = data.slug ?? filename.replace(/\.mdx$/, '');
 
-      // Skip junk/excluded posts
-      if (EXCLUDED.has(slug)) {
-        skipped.push(slug);
-        continue;
-      }
+        if (EXCLUDED.has(slug)) { skipped.push(`[excluded] ${slug}`); continue; }
+        if (existingSlugs.has(slug)) { skipped.push(`[exists] ${slug}`); continue; }
 
-      // Skip if already in Supabase
-      if (existingSlugs.has(slug)) {
-        skipped.push(slug);
-        continue;
-      }
+        const processed = await remark()
+          .use(remarkGfm)
+          .use(remarkHtml, { sanitize: false })
+          .process(content);
+        const contentHtml = processed.toString();
 
-      // Convert markdown to HTML
-      const processed = await remark()
-        .use(remarkGfm)
-        .use(remarkHtml, { sanitize: false })
-        .process(content);
-      const contentHtml = processed.toString();
+        const excerpt =
+          content
+            .replace(/^---[\s\S]*?---/, '')
+            .replace(/#{1,6}\s.*/g, '')
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+            .replace(/[*_`]/g, '')
+            .split('\n')
+            .map((l) => l.trim())
+            .find((l) => l.length > 60)
+            ?.slice(0, 200) ?? '';
 
-      // Build a plain-text excerpt from first substantial paragraph
-      const excerpt =
-        content
-          .replace(/^---[\s\S]*?---/, '')
-          .replace(/#{1,6}\s.*/g, '')
-          .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-          .replace(/[*_`]/g, '')
-          .split('\n')
-          .map((l) => l.trim())
-          .find((l) => l.length > 60)
-          ?.slice(0, 200) ?? '';
+        const categories = Array.isArray(data.categories) ? data.categories : [];
+        const date = data.date
+          ? String(data.date).slice(0, 10)
+          : new Date().toISOString().split('T')[0];
 
-      const categories = Array.isArray(data.categories) ? data.categories : [];
-      const date = data.date
-        ? String(data.date).slice(0, 10)
-        : new Date().toISOString().split('T')[0];
+        const { error } = await supabaseServer.from('blog_posts').insert([{
+          title:              data.title ?? slug,
+          slug,
+          excerpt,
+          content:            contentHtml,
+          author:             data.author ?? 'FastSEO',
+          date,
+          categories,
+          featured_image_url: data.featured_image ?? data.image ?? '',
+          status:             'published',
+          focus_keyword:      '',
+          seo_title:          '',
+          meta_description:   '',
+          canonical_url:      '',
+          robots:             'index/follow',
+          og_title:           '',
+          og_description:     '',
+          og_image:           '',
+          schema_type:        'BlogPosting',
+          created_at:         new Date().toISOString(),
+          updated_at:         new Date().toISOString(),
+        }]);
 
-      const { error } = await supabaseServer.from('blog_posts').insert([{
-        title:              data.title ?? slug,
-        slug,
-        excerpt,
-        content:            contentHtml,
-        author:             data.author ?? 'FastSEO',
-        date,
-        categories,
-        featured_image_url: data.featured_image ?? data.image ?? '',
-        status:             'published',
-        focus_keyword:      '',
-        seo_title:          '',
-        meta_description:   '',
-        canonical_url:      '',
-        robots:             'index/follow',
-        og_title:           '',
-        og_description:     '',
-        og_image:           '',
-        schema_type:        'BlogPosting',
-        created_at:         new Date().toISOString(),
-        updated_at:         new Date().toISOString(),
-      }]);
-
-      if (error) {
-        console.error(`Failed to import ${slug}:`, error.message);
-        failed.push({ slug, error: error.message });
-      } else {
-        imported.push(slug);
-        existingSlugs.add(slug); // prevent re-import within same run
+        if (error) {
+          console.error(`Failed to import ${slug}:`, error.message);
+          failed.push({ slug, error: error.message });
+        } else {
+          imported.push(slug);
+          existingSlugs.add(slug);
+        }
+      } catch (fileError) {
+        failed.push({ slug: filename, error: String(fileError) });
       }
     }
 
     return NextResponse.json({
+      totalFiles: allFiles.length,
       imported: imported.length,
       skipped: skipped.length,
       failed: failed.length,
       importedSlugs: imported,
+      skippedDetails: skipped,
       failedDetails: failed,
     });
   } catch (error) {
