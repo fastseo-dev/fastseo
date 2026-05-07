@@ -12,6 +12,8 @@ const services = [
   { label: "Cannabis SEO",      href: "/marijuana-seo/" },
   { label: "AI Search (AEO)",   href: "/ai-seo-services/" },
   { label: "Link Building",     href: "/link-building-services/" },
+  { label: "eCommerce SEO",     href: "/pages/ecommerce-seo" },
+  { label: "Law Firm SEO",      href: "/pages/law-firm-seo" },
 ];
 
 const company = [

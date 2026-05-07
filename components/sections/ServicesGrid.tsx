@@ -65,6 +65,20 @@ const services = [
       "Expert-written SEO content for regulated niches. E-E-A-T optimised articles, landing pages and thought leadership.",
     href: "/content-writing-services/",
   },
+  {
+    icon: "🛒",
+    title: "eCommerce SEO",
+    description:
+      "Technical audits, category optimisation, and content strategies that turn organic traffic into revenue for online stores.",
+    href: "/pages/ecommerce-seo",
+  },
+  {
+    icon: "⚖️",
+    title: "Law Firm SEO",
+    description:
+      "Local search domination, E-E-A-T authority building, and practice area pages that generate qualified legal enquiries.",
+    href: "/pages/law-firm-seo",
+  },
 ];
 
 export default function ServicesGrid() {
