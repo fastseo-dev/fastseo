@@ -139,7 +139,15 @@ export default function BlogPage() {
                       {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm space-x-2">
+                  <td className="px-6 py-4 text-sm space-x-3">
+                    <a
+                      href={`/blog/${post.slug}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      View ↗
+                    </a>
                     <Link
                       href={`/admin/blog/${post.id}`}
                       className="text-blue-600 hover:text-blue-800"
