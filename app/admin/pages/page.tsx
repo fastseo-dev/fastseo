@@ -25,6 +25,7 @@ export default function PagesAdminPage() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [migrating, setMigrating] = useState(false);
+  const [seeding, setSeeding] = useState(false);
 
   useEffect(() => {
     fetchPages();
@@ -71,6 +72,25 @@ export default function PagesAdminPage() {
     }
   };
 
+  const handleSeed = async () => {
+    if (!confirm('Import pre-written eCommerce SEO and Law Firm SEO service pages? Already-existing slugs will be skipped.')) return;
+    setSeeding(true);
+    try {
+      const res = await fetch('/api/admin/seed-pages', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(`Done! Imported ${data.imported}, Skipped ${data.skipped}.`);
+        if (data.imported > 0) fetchPages();
+      } else {
+        toast.error(data.error || 'Seeding failed');
+      }
+    } catch (error) {
+      toast.error('Error: ' + String(error));
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this page?')) return;
     setDeleting(id);
@@ -99,6 +119,13 @@ export default function PagesAdminPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Pages</h1>
         <div className="flex gap-3">
+          <button
+            onClick={handleSeed}
+            disabled={seeding}
+            className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 disabled:opacity-50 text-sm font-medium"
+          >
+            {seeding ? 'Importing...' : '⬇ Import Service Pages'}
+          </button>
           <button
             onClick={handleMigrate}
             disabled={migrating}
