@@ -216,6 +216,9 @@ export default function PageEditorPage() {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [aiModal, setAiModal] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [aiForm, setAiForm] = useState({ service: '', tone: 'professional', audience: '' });
 
   useEffect(() => {
     if (!isNew && params.id) fetchPage(params.id as string);
@@ -254,6 +257,45 @@ export default function PageEditorPage() {
       slug: prev.slug || slugify(value),
       hero_label: prev.hero_label || value,
     }));
+  };
+
+  const handleGenerate = async () => {
+    if (!aiForm.service.trim()) { toast.error('Enter a service or keyword'); return; }
+    setGenerating(true);
+    try {
+      const res = await fetch('/api/admin/generate-page', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ service: aiForm.service, tone: aiForm.tone, targetAudience: aiForm.audience }),
+      });
+      const data = await res.json();
+      if (!res.ok) { toast.error(data.error || 'Generation failed'); return; }
+      setPage((prev) => ({
+        ...prev,
+        title:            data.title        || prev.title,
+        slug:             data.slug         || prev.slug,
+        hero_label:       data.hero_label   || prev.hero_label,
+        hero_subtitle:    data.hero_subtitle || prev.hero_subtitle,
+        excerpt:          data.excerpt      || prev.excerpt,
+        features:         Array.isArray(data.features) ? data.features : prev.features,
+        faqs:             Array.isArray(data.faqs)     ? data.faqs     : prev.faqs,
+        content:          data.content      || prev.content,
+        template:         'service',
+        page_type:        'service',
+        focus_keyword:    data.focus_keyword    || prev.focus_keyword,
+        seo_title:        data.seo_title        || prev.seo_title,
+        meta_description: data.meta_description || prev.meta_description,
+        og_title:         data.og_title         || prev.og_title,
+        og_description:   data.og_description   || prev.og_description,
+        schema_type:      data.schema_type      || prev.schema_type,
+      }));
+      setAiModal(false);
+      toast.success('Page generated! Review and publish when ready.');
+    } catch (err) {
+      toast.error(String(err));
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const validate = (): boolean => {
@@ -298,9 +340,21 @@ export default function PageEditorPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">
-        {isNew ? 'New Page' : 'Edit Page'}
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">
+          {isNew ? 'New Page' : 'Edit Page'}
+        </h1>
+        <button
+          type="button"
+          onClick={() => setAiModal(true)}
+          className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white rounded-lg hover:from-violet-700 hover:to-blue-700 font-semibold text-sm shadow-md hover:shadow-lg transition-all"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+          </svg>
+          Generate with AI
+        </button>
+      </div>
 
       <form onSubmit={handleSubmit} className="max-w-4xl space-y-4">
 
@@ -567,6 +621,136 @@ export default function PageEditorPage() {
           )}
         </div>
       </form>
+
+      {/* ── AI Generator Modal ───────────────────────────────────── */}
+      {aiModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+            <div className="p-6 border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center text-white">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">Generate Page with AI</h2>
+                  <p className="text-sm text-gray-500">Creates a full service page with SEO-optimised content</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Service / Keyword <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={aiForm.service}
+                  onChange={(e) => setAiForm((f) => ({ ...f, service: e.target.value }))}
+                  onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+                  placeholder="e.g. eCommerce SEO, Law Firm SEO, SaaS SEO…"
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-violet-500 focus:outline-none"
+                  autoFocus
+                />
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {['eCommerce SEO', 'Law Firm SEO', 'SaaS SEO', 'Local Business SEO', 'Healthcare SEO', 'Finance SEO'].map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setAiForm((f) => ({ ...f, service: s }))}
+                      className={`px-2.5 py-1 text-xs rounded-full border transition-all ${
+                        aiForm.service === s
+                          ? 'bg-violet-100 border-violet-400 text-violet-700 font-medium'
+                          : 'border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tone</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: 'professional', label: 'Professional', icon: '💼' },
+                    { id: 'authoritative', label: 'Authoritative', icon: '🏆' },
+                    { id: 'conversational', label: 'Conversational', icon: '💬' },
+                  ].map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setAiForm((f) => ({ ...f, tone: t.id }))}
+                      className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 text-sm transition-all ${
+                        aiForm.tone === t.id
+                          ? 'border-violet-500 bg-violet-50 text-violet-700 font-semibold'
+                          : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                      }`}
+                    >
+                      <span className="text-lg">{t.icon}</span>
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Target Audience
+                  <span className="ml-1 font-normal text-gray-400 text-xs">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={aiForm.audience}
+                  onChange={(e) => setAiForm((f) => ({ ...f, audience: e.target.value }))}
+                  placeholder="e.g. UK online retailers, personal injury law firms…"
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-violet-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-amber-700">
+                <strong>Note:</strong> Existing page fields will be overwritten. This will set the template to <em>Service Page</em>. Review everything before publishing.
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-100 flex gap-3">
+              <button
+                type="button"
+                onClick={handleGenerate}
+                disabled={generating}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white rounded-lg hover:from-violet-700 hover:to-blue-700 disabled:opacity-60 font-semibold text-sm transition-all"
+              >
+                {generating ? (
+                  <>
+                    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                    </svg>
+                    Generating…
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    Generate Page
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => setAiModal(false)}
+                disabled={generating}
+                className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
