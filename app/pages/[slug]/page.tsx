@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/lib/supabase';
+import ServicePage from '@/components/ServicePage';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +18,12 @@ interface DbPage {
   content: string;
   author: string;
   date: string;
+  page_type: string;
+  template: string;
+  hero_label: string;
+  hero_subtitle: string;
+  features: { title: string; desc: string }[];
+  faqs: { q: string; a: string }[];
   featured_image_url: string;
   status: string;
   seo_title: string;
@@ -37,7 +44,14 @@ async function getPage(slug: string): Promise<DbPage | null> {
     .eq('status', 'published')
     .single();
   if (error || !data) return null;
-  return data as DbPage;
+  return {
+    ...data,
+    template:      data.template      ?? 'article',
+    hero_label:    data.hero_label    ?? '',
+    hero_subtitle: data.hero_subtitle ?? '',
+    features:      Array.isArray(data.features) ? data.features : [],
+    faqs:          Array.isArray(data.faqs)     ? data.faqs     : [],
+  } as DbPage;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -46,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!page) return {};
 
   const title = page.seo_title || page.title;
-  const description = page.meta_description || page.excerpt || undefined;
+  const description = page.meta_description || page.excerpt || page.hero_subtitle || undefined;
   const canonical = page.canonical_url || `https://www.fastseosolutions.com/pages/${slug}/`;
   const [robotsIndex, robotsFollow] = (page.robots || 'index/follow').split('/');
   const ogImage = page.og_image || page.featured_image_url || 'https://www.fastseosolutions.com/opengraph-image';
@@ -72,19 +86,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function buildSchema(page: DbPage) {
-  if (!page.schema_type || page.schema_type === 'None') return null;
-  return {
-    '@context': 'https://schema.org',
-    '@type': page.schema_type,
-    name: page.title,
-    description: page.meta_description || page.excerpt || undefined,
-    url: page.canonical_url || `https://www.fastseosolutions.com/pages/${page.slug}/`,
-    image: page.og_image || page.featured_image_url || undefined,
-    author: { '@type': 'Organization', name: 'FastSEO' },
-  };
-}
-
 function formatDate(dateStr: string) {
   if (!dateStr) return '';
   try {
@@ -101,7 +102,35 @@ export default async function PageRoute({ params }: Props) {
   const page = await getPage(slug);
   if (!page) notFound();
 
-  const schema = buildSchema(page);
+  const canonical = page.canonical_url || `https://www.fastseosolutions.com/pages/${slug}/`;
+
+  // ── Service page template — identical layout to iGaming, Adult, Dental pages
+  if (page.template === 'service') {
+    return (
+      <ServicePage
+        label={page.hero_label || page.title}
+        title={page.title}
+        subtitle={page.hero_subtitle || page.excerpt || ''}
+        features={page.features}
+        faqs={page.faqs.length > 0 ? page.faqs : undefined}
+        canonicalPath={`/pages/${slug}/`}
+        serviceName={page.seo_title || page.title}
+        serviceDescription={page.meta_description || page.excerpt || page.hero_subtitle || ''}
+        contentHtml={page.content || undefined}
+      />
+    );
+  }
+
+  // ── Article / Legal template
+  const schema = (page.schema_type && page.schema_type !== 'None') ? {
+    '@context': 'https://schema.org',
+    '@type': page.schema_type,
+    name: page.title,
+    description: page.meta_description || page.excerpt || undefined,
+    url: canonical,
+    image: page.og_image || page.featured_image_url || undefined,
+    author: { '@type': 'Organization', name: 'FastSEO' },
+  } : null;
 
   return (
     <div className="min-h-screen bg-void pt-[70px]">
@@ -115,11 +144,7 @@ export default async function PageRoute({ params }: Props) {
       {page.featured_image_url && (
         <div className="w-full max-h-72 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={page.featured_image_url}
-            alt={page.title}
-            className="w-full h-full object-cover"
-          />
+          <img src={page.featured_image_url} alt={page.title} className="w-full h-full object-cover" />
         </div>
       )}
 
@@ -157,9 +182,7 @@ export default async function PageRoute({ params }: Props) {
         <div className="prose" dangerouslySetInnerHTML={{ __html: page.content }} />
 
         <div className="mt-16 pt-10 border-t border-border">
-          <p className="font-body text-[14px] text-text-muted mb-4">
-            Need specialist SEO for your business?
-          </p>
+          <p className="font-body text-[14px] text-text-muted mb-4">Need specialist SEO for your business?</p>
           <Link
             href="/contact/"
             className="inline-flex items-center gap-1.5 bg-lime text-void font-display font-bold text-[14px] px-6 py-3.5 rounded-lg hover:bg-[#F0FF6B] hover:shadow-[0_0_20px_rgba(232,255,71,0.3)] transition-all"

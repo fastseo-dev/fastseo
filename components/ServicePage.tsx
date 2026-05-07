@@ -16,10 +16,11 @@ interface ServicePageProps {
   subtitle: string;
   features: ServiceFeature[];
   faqs?: FAQ[];
-  canonicalPath: string;   // e.g. "/igaming-seo/"
-  serviceName: string;     // for schema
+  canonicalPath: string;
+  serviceName: string;
   serviceDescription: string;
   children?: React.ReactNode;
+  contentHtml?: string;
 }
 
 export default function ServicePage({
@@ -32,6 +33,7 @@ export default function ServicePage({
   serviceName,
   serviceDescription,
   children,
+  contentHtml,
 }: ServicePageProps) {
   const siteUrl = "https://www.fastseosolutions.com";
 
@@ -150,10 +152,14 @@ export default function ServicePage({
         </section>
 
         {/* ── Body content ── */}
-        {children && (
+        {(children || contentHtml) && (
           <section className="border-t border-border">
             <div className="max-w-[780px] mx-auto px-6 py-20">
-              <div className="prose">{children}</div>
+              {contentHtml ? (
+                <div className="prose" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+              ) : (
+                <div className="prose">{children}</div>
+              )}
             </div>
           </section>
         )}
