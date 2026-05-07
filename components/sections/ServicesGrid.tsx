@@ -70,14 +70,14 @@ const services = [
     title: "eCommerce SEO",
     description:
       "Technical audits, category optimisation, and content strategies that turn organic traffic into revenue for online stores.",
-    href: "/pages/ecommerce-seo",
+    href: "/ecommerce-seo/",
   },
   {
     icon: "⚖️",
     title: "Law Firm SEO",
     description:
       "Local search domination, E-E-A-T authority building, and practice area pages that generate qualified legal enquiries.",
-    href: "/pages/law-firm-seo",
+    href: "/law-firm-seo/",
   },
 ];
 

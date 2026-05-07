@@ -59,13 +59,13 @@ const niches = [
   },
   {
     label: "eCommerce SEO",
-    href: "/pages/ecommerce-seo",
+    href: "/ecommerce-seo/",
     desc: "Technical SEO, category optimisation, and content strategies that turn organic search traffic into measurable revenue for online retailers.",
     accent: "text-electric",
   },
   {
     label: "Law Firm SEO",
-    href: "/pages/law-firm-seo",
+    href: "/law-firm-seo/",
     desc: "Local search dominance, E-E-A-T authority, and practice area pages that generate a consistent pipeline of qualified legal enquiries.",
     accent: "text-lime",
   },

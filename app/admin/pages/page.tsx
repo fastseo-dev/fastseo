@@ -190,7 +190,7 @@ export default function PagesAdminPage() {
                   <td className="px-6 py-4 text-sm text-gray-500">{formatDate(page.updated_at)}</td>
                   <td className="px-6 py-4 text-sm space-x-3">
                     <a
-                      href={`/pages/${page.slug}`}
+                      href={`/${page.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-500 hover:text-gray-700"

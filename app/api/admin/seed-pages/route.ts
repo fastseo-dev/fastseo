@@ -221,7 +221,7 @@ export async function POST() {
         focus_keyword:    page.focus_keyword,
         seo_title:        page.seo_title,
         meta_description: page.meta_description,
-        canonical_url:    `https://www.fastseosolutions.com/pages/${page.slug}/`,
+        canonical_url:    `https://www.fastseosolutions.com/${page.slug}/`,
         robots:           page.robots,
         og_title:         page.og_title,
         og_description:   page.og_description,

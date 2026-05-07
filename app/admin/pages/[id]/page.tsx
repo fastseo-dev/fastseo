@@ -421,7 +421,7 @@ export default function PageEditorPage() {
               Slug <span className="text-red-500">*</span>
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-gray-400 text-sm font-mono whitespace-nowrap">/pages/</span>
+              <span className="text-gray-400 text-sm font-mono whitespace-nowrap">/</span>
               <input
                 type="text"
                 value={page.slug}
@@ -611,7 +611,7 @@ export default function PageEditorPage() {
           </button>
           {!isNew && (
             <a
-              href={`/pages/${page.slug}`}
+              href={`/${page.slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm"

@@ -15,8 +15,8 @@ const serviceLinks = [
   { label: "Marijuana SEO",     href: "/marijuana-seo/" },
   { label: "SaaS SEO",          href: "/saas-seo/" },
   { label: "AI SEO Services",   href: "/ai-seo-services/" },
-  { label: "eCommerce SEO",     href: "/pages/ecommerce-seo" },
-  { label: "Law Firm SEO",      href: "/pages/law-firm-seo" },
+  { label: "eCommerce SEO",     href: "/ecommerce-seo/" },
+  { label: "Law Firm SEO",      href: "/law-firm-seo/" },
 ];
 
 const linkBuildingLinks = [
