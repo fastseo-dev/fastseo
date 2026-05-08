@@ -4,6 +4,7 @@ import { LogoMark } from "./Logo";
 /* ─── Data ───────────────────────────────────────────────────────────────── */
 
 const services = [
+  { label: "SEO Services",      href: "/seo-services/" },
   { label: "iGaming SEO",       href: "/igaming-seo/" },
   { label: "Crypto SEO",        href: "/cryptocurrency-seo/" },
   { label: "Adult SEO",         href: "/adult-seo/" },
