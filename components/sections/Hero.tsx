@@ -8,8 +8,8 @@ const aiEngines = [
 ];
 
 const trustSignals = [
-  "500+ Ranked Keywords",
-  "iGaming & Crypto Specialist",
+  "Fast SEO Results",
+  "Adult, iGaming & Crypto Specialist",
   "AI Search Ready",
 ];
 
@@ -69,8 +69,8 @@ export default function Hero() {
             </h1>
 
             <p className="font-body text-[17px] text-text-muted leading-relaxed max-w-[520px] mb-8">
-              Specialist SEO for iGaming, Crypto, Adult &amp; SaaS.
-              We rank brands Google won&apos;t touch — and get you recommended
+              Fast SEO services for iGaming, Crypto, Adult &amp; SaaS.
+              We rank brands most agencies won&apos;t touch — and get you recommended
               by ChatGPT, Gemini &amp; Perplexity.
             </p>
 

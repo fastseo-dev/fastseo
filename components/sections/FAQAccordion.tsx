@@ -2,34 +2,34 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 const faqs = [
   {
+    question: "What fast SEO services does FastSEO offer?",
+    answer:
+      "FastSEO provides fast SEO services for organic growth across the most competitive and restricted niches — adult websites, iGaming, cryptocurrency, cannabis, dental, and SaaS. Our fast SEO strategies combine technical audits, on-page optimisation, specialist link building, and AI-search visibility to deliver measurable ranking improvements faster than generalist agencies. Whether you need fast SEO results for an adult site, a crypto brand, or an eCommerce store, we build the strategy around your specific competitive environment.",
+  },
+  {
+    question: "Do you provide adult SEO — including for escort agencies, strippers, and BDSM businesses?",
+    answer:
+      "Yes. We are a specialist adult SEO agency working across the full adult industry — adult content platforms, porn sites, escort agencies and directories, exotic dancers, strippers, dominatrix and BDSM services, sex toy eCommerce, and cam sites. Our adult SEO services cover technical optimisation, adult keyword strategy, and a pre-built adult publisher network for link building. We are the adult SEO company for niches most agencies refuse to touch.",
+  },
+  {
     question: "Do you work with iGaming brands in restricted markets?",
     answer:
-      "Yes. We have deep experience in grey and regulated markets across the UK, EU, Canada, and Tier 1 jurisdictions. We understand compliance requirements and build strategies that hold up to scrutiny.",
+      "Yes. We have deep experience in grey and regulated markets across the UK, EU, Canada, and Tier 1 jurisdictions. We understand compliance requirements and build fast SEO strategies that hold up to regulatory scrutiny while delivering consistent organic growth.",
   },
   {
-    question: "How do you get brands recommended by ChatGPT and Perplexity?",
+    question: "Do you offer crypto SEO and blockchain gaming SEO?",
     answer:
-      "Answer Engine Optimisation (AEO) focuses on structured data, topical authority, and citation-building across sources that AI engines index. We audit your brand's AI visibility, identify citation gaps, and build a programme to make your brand the go-to recommendation.",
+      "Yes. We provide specialist crypto SEO services for cryptocurrency exchanges, DeFi platforms, NFT projects, and blockchain gaming SEO for Web3 gaming brands. Crypto and gaming SEO requires specialist knowledge — many content categories are restricted on mainstream ad platforms, making organic SEO solutions the primary acquisition channel. Our crypto SEO solutions target the keyword clusters and backlink sources that rank in this vertical.",
   },
   {
-    question: "What link building tactics do you use for adult and crypto?",
+    question: "How long does it take to see fast SEO results?",
     answer:
-      "Manual outreach to niche-relevant publishers, digital PR campaigns, broken link building, and editorial placements. We never use PBNs or black-hat tactics — our links are built to last algorithm updates.",
-  },
-  {
-    question: "How long does it take to see SEO results?",
-    answer:
-      "Most clients see meaningful movement in 3–6 months. Highly competitive niches like iGaming and crypto typically require 6–12 months for top-3 rankings on money keywords. We set realistic milestones from day one.",
-  },
-  {
-    question: "Do you offer monthly retainers or project-based work?",
-    answer:
-      "Both. Most clients engage on a monthly retainer for ongoing SEO, content and link building. We also take on project-based work for technical audits, site migrations and one-off link campaigns.",
+      "Most clients see meaningful ranking movement in 3–6 months, with significant traffic growth by months 6–12. Highly competitive niches like iGaming and crypto typically require 6–12 months for top-3 rankings on commercial keywords. Adult SEO keywords often have lower competition, which can accelerate fast SEO results in some niches. We set realistic milestones from day one and provide full monthly reporting on all progress.",
   },
   {
     question: "What makes FastSEO different from other SEO agencies?",
     answer:
-      "We only work in verticals we deeply understand. No generalist agencies, no passing work to juniors. Every strategy is built by specialists who live in your niche — and every result is backed by data.",
+      "We only operate in niches we deeply specialise in — adult SEO, iGaming, crypto, cannabis, SaaS, and other restricted verticals. No generalist approach, no passing work to juniors. Our fast SEO services are built by specialists who spend every day in your niche. Every result is transparently reported, every recommendation is backed by data, and every client gets a dedicated specialist — not a rotating account team.",
   },
 ];
 
