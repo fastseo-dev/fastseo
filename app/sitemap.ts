@@ -32,6 +32,7 @@ const staticRoutes: {
   { url: "/pricing/",                      priority: 0.9,  changeFrequency: "monthly" },
   { url: "/case-studies/",                 priority: 0.85, changeFrequency: "monthly" },
   { url: "/about/",                        priority: 0.75, changeFrequency: "monthly" },
+  { url: "/team/",                         priority: 0.75, changeFrequency: "monthly" },
   { url: "/contact/",                      priority: 0.8,  changeFrequency: "weekly"  },
   { url: "/blog/",                         priority: 0.8,  changeFrequency: "weekly"  },
   { url: "/privacy-policy/",              priority: 0.3,  changeFrequency: "yearly"  },
