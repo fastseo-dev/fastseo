@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
         const excerpt =
           (data.excerpt as string | undefined) ||
-          content
+          (content
             .replace(/^---[\s\S]*?---/, '')
             .replace(/#{1,6}\s.*/g, '')
             .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
@@ -65,31 +65,36 @@ export async function POST(request: Request) {
             .split('\n')
             .map((l) => l.trim())
             .find((l) => l.length > 60)
-            ?.slice(0, 200) ?? '';
+            ?.slice(0, 200) ?? '');
 
         const categories = Array.isArray(data.categories) ? data.categories : [];
         const date = parseDate(data.date);
         const now = new Date().toISOString();
 
-        // Check if exists
-        const { data: existing } = await supabaseServer
+        // Check if exists (PGRST116 = "no rows" — not a real error)
+        const { data: existing, error: lookupError } = await supabaseServer
           .from('blog_posts')
           .select('id')
           .eq('slug', slug)
           .single();
+        if (lookupError && lookupError.code !== 'PGRST116') {
+          failed.push({ slug, error: `lookup: ${lookupError.message}` });
+          continue;
+        }
 
         if (existing) {
           // Update existing entry with fresh MDX content
           const { error } = await supabaseServer
             .from('blog_posts')
             .update({
-              title:      data.title ?? slug,
-              content:    contentHtml,
+              title:              data.title ?? slug,
+              content:            contentHtml,
               excerpt,
-              author:     data.author ?? 'FastSEO',
+              author:             data.author ?? 'FastSEO',
               categories,
               date,
-              updated_at: now,
+              featured_image_url: data.featured_image ?? data.image ?? undefined,
+              updated_at:         now,
             })
             .eq('id', existing.id);
 

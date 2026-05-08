@@ -24,6 +24,7 @@ export interface PostMeta {
   author: string;
   categories: string[];
   excerpt: string;
+  featuredImage?: string;
 }
 
 export interface Post extends PostMeta {
@@ -86,6 +87,7 @@ export async function getPost(slug: string): Promise<Post | null> {
     author: (data.author as string) ?? "",
     categories: (data.categories as string[]) ?? [],
     excerpt: "",
+    featuredImage: (data.featured_image as string | undefined) ?? (data.image as string | undefined),
     content,
     contentHtml: processed.toString(),
   };

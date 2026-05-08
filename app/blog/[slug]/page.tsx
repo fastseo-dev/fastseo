@@ -147,6 +147,16 @@ export default async function BlogPostPage({ params }: Props) {
             <span className="text-border-strong">·</span>
             <span className="font-body text-[13px] text-text-muted">{formatDate(dbPost.date)}</span>
           </div>
+          {dbPost.featured_image_url && (
+            <div className="mb-10 rounded-xl overflow-hidden border border-border">
+              <img
+                src={dbPost.featured_image_url}
+                alt={dbPost.title}
+                className="w-full h-auto object-cover"
+                loading="eager"
+              />
+            </div>
+          )}
           <div className="prose" dangerouslySetInnerHTML={{ __html: dbPost.content }} />
           <div className="mt-16 pt-10 border-t border-border">
             <p className="font-body text-[14px] text-text-muted mb-4">Need specialist SEO for your niche?</p>
@@ -197,6 +207,16 @@ export default async function BlogPostPage({ params }: Props) {
           <span className="text-border-strong">·</span>
           <span className="font-body text-[13px] text-text-muted">{formatDate(mdxPost.date)}</span>
         </div>
+        {mdxPost.featuredImage && (
+          <div className="mb-10 rounded-xl overflow-hidden border border-border">
+            <img
+              src={mdxPost.featuredImage}
+              alt={mdxPost.title}
+              className="w-full h-auto object-cover"
+              loading="eager"
+            />
+          </div>
+        )}
         <div className="prose" dangerouslySetInnerHTML={{ __html: mdxPost.contentHtml }} />
         <div className="mt-16 pt-10 border-t border-border">
           <p className="font-body text-[14px] text-text-muted mb-4">Need specialist SEO for your niche?</p>
