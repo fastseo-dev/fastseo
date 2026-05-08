@@ -18,6 +18,7 @@ export default function BlogPage() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [migrating, setMigrating] = useState(false);
+  const [resyncing, setResyncing] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -65,6 +66,25 @@ export default function BlogPage() {
     }
   };
 
+  const handleResync = async () => {
+    if (!confirm('Resync all MDX blog posts to Supabase? This will overwrite existing Supabase content with the latest MDX file content.')) return;
+    setResyncing(true);
+    try {
+      const res = await fetch('/api/admin/resync-mdx', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(`Done! Updated ${data.updated}, Inserted ${data.inserted}, Failed ${data.failed}.`);
+        if (data.inserted > 0) fetchPosts();
+      } else {
+        toast.error(data.error || 'Resync failed');
+      }
+    } catch (error) {
+      toast.error('Resync error: ' + String(error));
+    } finally {
+      setResyncing(false);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) return;
 
@@ -90,6 +110,13 @@ export default function BlogPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Blog Posts</h1>
         <div className="flex gap-3">
+          <button
+            onClick={handleResync}
+            disabled={resyncing}
+            className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 text-sm font-medium"
+          >
+            {resyncing ? 'Resyncing...' : '🔄 Resync MDX Posts'}
+          </button>
           <button
             onClick={handleMigrate}
             disabled={migrating}
