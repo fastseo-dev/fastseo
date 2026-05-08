@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPost, formatDate } from "@/lib/blog";
 import { supabaseServer } from "@/lib/supabase";
+import { getAuthorByName, buildPersonSchema } from "@/lib/authors";
 
 export const dynamic = "force-dynamic";
 
@@ -90,15 +91,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function buildSchema(post: SupabasePost) {
   if (!post.schema_type || post.schema_type === "None") return null;
+  const authorData = getAuthorByName(post.author);
+  const authorSchema = authorData
+    ? buildPersonSchema(authorData)
+    : { "@type": "Person", name: post.author };
   return {
     "@context": "https://schema.org",
     "@type": post.schema_type,
     headline: post.title,
     description: post.meta_description || post.excerpt || undefined,
-    author: { "@type": "Person", name: post.author },
+    author: authorSchema,
     datePublished: post.date,
+    dateModified: post.date,
     url: post.canonical_url || `https://www.fastseosolutions.com/blog/${post.slug}/`,
     image: post.og_image || post.featured_image_url || undefined,
+    publisher: {
+      "@type": "Organization",
+      name: "FastSEO",
+      url: "https://www.fastseosolutions.com",
+    },
   };
 }
 
@@ -142,7 +153,16 @@ export default async function BlogPostPage({ params }: Props) {
               <div className="w-7 h-7 rounded-full bg-surface border border-border flex items-center justify-center">
                 <span className="font-display font-bold text-[10px] text-lime">{dbPost.author.charAt(0).toUpperCase()}</span>
               </div>
-              <span className="font-body text-[13px] text-text-muted capitalize">{dbPost.author}</span>
+              {(() => {
+                const a = getAuthorByName(dbPost.author);
+                return a ? (
+                  <Link href={`/author/${a.slug}/`} className="font-body text-[13px] text-text-muted hover:text-lime transition-colors capitalize">
+                    {dbPost.author}
+                  </Link>
+                ) : (
+                  <span className="font-body text-[13px] text-text-muted capitalize">{dbPost.author}</span>
+                );
+              })()}
             </div>
             <span className="text-border-strong">·</span>
             <span className="font-body text-[13px] text-text-muted">{formatDate(dbPost.date)}</span>
@@ -202,7 +222,16 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="w-7 h-7 rounded-full bg-surface border border-border flex items-center justify-center">
               <span className="font-display font-bold text-[10px] text-lime">{mdxPost.author.charAt(0).toUpperCase()}</span>
             </div>
-            <span className="font-body text-[13px] text-text-muted capitalize">{mdxPost.author}</span>
+            {(() => {
+              const a = getAuthorByName(mdxPost.author);
+              return a ? (
+                <Link href={`/author/${a.slug}/`} className="font-body text-[13px] text-text-muted hover:text-lime transition-colors capitalize">
+                  {mdxPost.author}
+                </Link>
+              ) : (
+                <span className="font-body text-[13px] text-text-muted capitalize">{mdxPost.author}</span>
+              );
+            })()}
           </div>
           <span className="text-border-strong">·</span>
           <span className="font-body text-[13px] text-text-muted">{formatDate(mdxPost.date)}</span>

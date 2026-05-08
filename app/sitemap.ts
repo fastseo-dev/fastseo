@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
 import { supabaseServer } from "@/lib/supabase";
+import { authors } from "@/lib/authors";
+import { caseStudies } from "@/lib/case-studies";
 
 export const dynamic = "force-dynamic";
 
@@ -82,5 +84,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  return [...staticEntries, ...blogEntries];
+  const authorEntries: MetadataRoute.Sitemap = authors.map((a) => ({
+    url: `${BASE}/author/${a.slug}/`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  const caseStudyEntries: MetadataRoute.Sitemap = caseStudies.map((cs) => ({
+    url: `${BASE}/case-studies/${cs.slug}/`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticEntries, ...caseStudyEntries, ...authorEntries, ...blogEntries];
 }
