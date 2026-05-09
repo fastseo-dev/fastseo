@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LogoMark } from "./Logo";
+import { seoServicesLocations } from "@/data/seo-services-locations";
 
 /* ─── Data ───────────────────────────────────────────────────────────────── */
 
@@ -74,7 +75,7 @@ export default function Footer() {
       <div className="max-w-[1160px] mx-auto px-6 pt-16 pb-8">
 
         {/* ── Column grid ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
 
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
@@ -120,6 +121,20 @@ export default function Footer() {
               {company.map((c) => (
                 <li key={c.href}>
                   <FooterLink href={c.href}>{c.label}</FooterLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Locations */}
+          <div>
+            <FooterHeading>Locations</FooterHeading>
+            <ul className="flex flex-col gap-2.5">
+              {seoServicesLocations.map((loc) => (
+                <li key={loc.slug}>
+                  <FooterLink href={`/seo-services/${loc.slug}/`}>
+                    {loc.flag} {loc.shortName}
+                  </FooterLink>
                 </li>
               ))}
             </ul>

@@ -3,6 +3,7 @@ import { getAllPosts } from "@/lib/blog";
 import { supabaseServer } from "@/lib/supabase";
 import { authors } from "@/lib/authors";
 import { caseStudies } from "@/lib/case-studies";
+import { seoServicesLocations } from "@/data/seo-services-locations";
 
 export const dynamic = "force-dynamic";
 
@@ -99,5 +100,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticEntries, ...caseStudyEntries, ...authorEntries, ...blogEntries];
+  const locationEntries: MetadataRoute.Sitemap = seoServicesLocations.map((loc) => ({
+    url: `${BASE}/seo-services/${loc.slug}/`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.85,
+  }));
+
+  return [...staticEntries, ...caseStudyEntries, ...authorEntries, ...locationEntries, ...blogEntries];
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ServicePage from "@/components/ServicePage";
+import { seoServicesLocations } from "@/data/seo-services-locations";
 
 export const metadata: Metadata = {
   title: "SEO Services — Specialist SEO Agency for Regulated & Competitive Niches",
@@ -109,6 +110,34 @@ const schemaFaq = {
     acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
 };
+
+const LocationsGrid = () => (
+  <section className="border-t border-border bg-surface">
+    <div className="max-w-[1160px] mx-auto px-6 py-16">
+      <h2 className="font-display font-black text-[28px] tracking-[-0.5px] text-text-primary mb-3">
+        SEO Services by Country
+      </h2>
+      <p className="font-body text-[14px] text-text-muted mb-10 max-w-[480px]">
+        Specialist SEO for regulated and competitive niches across 10 key markets.
+      </p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        {seoServicesLocations.map((loc) => (
+          <Link
+            key={loc.slug}
+            href={`/seo-services/${loc.slug}/`}
+            className="group rounded-xl border border-border bg-void p-4 hover:border-lime/40 hover:bg-lime/5 transition-all text-center"
+          >
+            <div className="text-[26px] mb-2">{loc.flag}</div>
+            <div className="font-body text-[13px] font-medium text-text-muted group-hover:text-lime transition-colors">
+              {loc.shortName}
+            </div>
+            <div className="font-body text-[11px] text-text-faint mt-0.5">{loc.name}</div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  </section>
+);
 
 export default function SeoServicesPage() {
   return (
@@ -283,6 +312,7 @@ export default function SeoServicesPage() {
           to see exactly where your organic growth opportunity lies.
         </p>
       </ServicePage>
+      <LocationsGrid />
     </>
   );
 }
