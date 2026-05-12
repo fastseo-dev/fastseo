@@ -211,8 +211,32 @@ export default async function SeoServicesCountryPage({ params }: Props) {
           </div>
         </section>
 
-        {/* ── Market context ── */}
+        {/* ── Why FastSEO ── */}
         <section className="border-t border-border bg-surface">
+          <div className="max-w-[1160px] mx-auto px-6 py-20">
+            <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
+              Why FastSEO for {loc.name}?
+            </h2>
+            <p className="font-body text-[15px] text-text-muted mb-10 max-w-[520px]">
+              Specialist knowledge that generalist agencies do not have — built into every {loc.shortName} engagement from day one.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {loc.whyUs.map((point, i) => (
+                <div key={i} className="flex items-start gap-4 rounded-xl border border-border bg-void p-5">
+                  <div className="shrink-0 w-6 h-6 rounded-full bg-lime/10 border border-lime/30 flex items-center justify-center mt-0.5">
+                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                      <path d="M1 4l2.5 2.5L9 1" stroke="#E8FF47" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <p className="font-body text-[14px] text-text-secondary leading-relaxed">{point}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Market context ── */}
+        <section className="border-t border-border">
           <div className="max-w-[780px] mx-auto px-6 py-20">
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-6">
               The {loc.name} SEO Market
@@ -221,11 +245,53 @@ export default async function SeoServicesCountryPage({ params }: Props) {
               {loc.marketContext}
             </p>
             <h3 className="font-display font-bold text-[20px] text-text-primary mb-4">
-              Regulatory & Compliance Context
+              Regulatory &amp; Compliance Context
             </h3>
-            <p className="font-body text-[15px] text-text-muted leading-relaxed">
+            <p className="font-body text-[15px] text-text-muted leading-relaxed mb-6">
               {loc.regulatoryContext}
             </p>
+            <h3 className="font-display font-bold text-[20px] text-text-primary mb-4">
+              Competitive Landscape
+            </h3>
+            <p className="font-body text-[15px] text-text-muted leading-relaxed">
+              {loc.competitiveInsight}
+            </p>
+          </div>
+        </section>
+
+        {/* ── Niche SEO Services ── */}
+        <section className="border-t border-border bg-surface">
+          <div className="max-w-[1160px] mx-auto px-6 py-20">
+            <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
+              Niche SEO Services in {loc.name}
+            </h2>
+            <p className="font-body text-[15px] text-text-muted mb-12 max-w-[520px]">
+              Vertical-specific programmes for the regulated and competitive niches we serve in {loc.name}.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {loc.niches.map((niche) => (
+                <Link
+                  key={niche.href}
+                  href={niche.href}
+                  className="group rounded-xl border border-border bg-void p-6 hover:border-lime/40 hover:bg-lime/[0.03] transition-all"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-display font-bold text-[15px] text-text-primary group-hover:text-lime transition-colors">
+                      {niche.label}
+                    </span>
+                    <svg
+                      width="14" height="14" viewBox="0 0 14 14" fill="none"
+                      className="text-text-faint group-hover:text-lime transition-colors shrink-0"
+                    >
+                      <path d="M2.5 11.5l9-9M11.5 2.5H4.5M11.5 2.5v7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <p className="font-body text-[13px] text-text-muted leading-relaxed">
+                    {niche.desc}
+                  </p>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
 
