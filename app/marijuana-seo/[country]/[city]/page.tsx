@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import NicheCityPage from "@/components/NicheCityPage";
 import { nicheConfigs } from "@/data/niche-country-types";
+import { cannabisCities } from "@/data/cannabis-cities";
 import type { NicheCityData } from "@/data/niche-city-types";
 
 export const dynamicParams = false;
@@ -9,7 +10,7 @@ export const dynamicParams = false;
 const BASE = "https://www.fastseosolutions.com";
 const NICHE = "marijuana-seo";
 
-const allCities: NicheCityData[] = [];
+const allCities: NicheCityData[] = [...cannabisCities];
 
 function getCityData(country: string, city: string): NicheCityData | null {
   return allCities.find((c) => c.countrySlug === country && c.citySlug === city) ?? null;
