@@ -4,6 +4,19 @@ import { supabaseServer } from "@/lib/supabase";
 import { authors } from "@/lib/authors";
 import { caseStudies } from "@/lib/case-studies";
 import { seoServicesLocations } from "@/data/seo-services-locations";
+import { igamingCountryLocations } from "@/data/igaming-country-locations";
+import { cryptoCountryLocations } from "@/data/crypto-country-locations";
+import { adultCountryLocations } from "@/data/adult-country-locations";
+import { dentalCountryLocations } from "@/data/dental-country-locations";
+import { saasCountryLocations } from "@/data/saas-country-locations";
+import { cannabisCountryLocations } from "@/data/cannabis-country-locations";
+import { igamingCitiesUk } from "@/data/igaming-cities-uk";
+import { igamingCitiesUsa } from "@/data/igaming-cities-usa";
+import { cryptoCities } from "@/data/crypto-cities";
+import { adultCities } from "@/data/adult-cities";
+import { dentalCities } from "@/data/dental-cities";
+import { saasCities } from "@/data/saas-cities";
+import { cannabisCities } from "@/data/cannabis-cities";
 
 export const dynamic = "force-dynamic";
 
@@ -107,5 +120,97 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
-  return [...staticEntries, ...caseStudyEntries, ...authorEntries, ...locationEntries, ...blogEntries];
+  const nicheCountryEntries: MetadataRoute.Sitemap = [
+    ...igamingCountryLocations.map((loc) => ({
+      url: `${BASE}/igaming-seo/${loc.countrySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...cryptoCountryLocations.map((loc) => ({
+      url: `${BASE}/cryptocurrency-seo/${loc.countrySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...adultCountryLocations.map((loc) => ({
+      url: `${BASE}/adult-seo/${loc.countrySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...dentalCountryLocations.map((loc) => ({
+      url: `${BASE}/dental-seo/${loc.countrySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...saasCountryLocations.map((loc) => ({
+      url: `${BASE}/saas-seo/${loc.countrySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...cannabisCountryLocations.map((loc) => ({
+      url: `${BASE}/marijuana-seo/${loc.countrySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+  ];
+
+  const nicheCityEntries: MetadataRoute.Sitemap = [
+    ...igamingCitiesUk.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...igamingCitiesUsa.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...cryptoCities.map((c) => ({
+      url: `${BASE}/cryptocurrency-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...adultCities.map((c) => ({
+      url: `${BASE}/adult-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...dentalCities.map((c) => ({
+      url: `${BASE}/dental-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...saasCities.map((c) => ({
+      url: `${BASE}/saas-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...cannabisCities.map((c) => ({
+      url: `${BASE}/marijuana-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+  ];
+
+  return [
+    ...staticEntries,
+    ...caseStudyEntries,
+    ...authorEntries,
+    ...locationEntries,
+    ...nicheCountryEntries,
+    ...nicheCityEntries,
+    ...blogEntries,
+  ];
 }
