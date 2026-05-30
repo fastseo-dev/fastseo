@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ServicePage from "@/components/ServicePage";
+import NicheLocationsSection from "@/components/NicheLocationsSection";
+import { adultCountryLocations } from "@/data/adult-country-locations";
 
 export const metadata: Metadata = {
   title: "Adult SEO Agency — SEO Services for Adult Websites, Porn Sites & Escorts",
@@ -296,6 +298,11 @@ export default function AdultSeoPage() {
           <li>Monthly reporting — keyword rankings, organic traffic, backlinks acquired, and measurable ROI</li>
         </ul>
       </ServicePage>
+      <NicheLocationsSection
+        nicheSlug="adult-seo"
+        heading="Adult SEO by Country"
+        countries={adultCountryLocations}
+      />
     </>
   );
 }

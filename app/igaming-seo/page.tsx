@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ServicePage from "@/components/ServicePage";
+import NicheLocationsSection from "@/components/NicheLocationsSection";
+import { igamingCountryLocations } from "@/data/igaming-country-locations";
 
 export const metadata: Metadata = {
   title: "iGaming SEO Agency — Casino, Sports Betting & Poker SEO",
@@ -64,6 +66,7 @@ const faqs = [
 
 export default function IgamingSeoPage() {
   return (
+    <>
     <ServicePage
       label="iGaming SEO"
       title="iGaming SEO Agency"
@@ -115,5 +118,11 @@ export default function IgamingSeoPage() {
         we can build the organic strategy that delivers consistent growth.
       </p>
     </ServicePage>
+    <NicheLocationsSection
+      nicheSlug="igaming-seo"
+      heading="iGaming SEO by Country"
+      countries={igamingCountryLocations}
+    />
+    </>
   );
 }

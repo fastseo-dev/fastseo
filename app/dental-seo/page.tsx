@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ServicePage from "@/components/ServicePage";
+import NicheLocationsSection from "@/components/NicheLocationsSection";
+import { dentalCountryLocations } from "@/data/dental-country-locations";
 
 export const metadata: Metadata = {
   title: "Dental SEO Agency — SEO for Dentists & Dental Practices",
@@ -64,6 +66,7 @@ const faqs = [
 
 export default function DentalSeoPage() {
   return (
+    <>
     <ServicePage
       label="Dental SEO"
       title="Dental SEO Services"
@@ -112,5 +115,11 @@ export default function DentalSeoPage() {
         to drive organic patient acquisition across a portfolio of practices.
       </p>
     </ServicePage>
+    <NicheLocationsSection
+      nicheSlug="dental-seo"
+      heading="Dental SEO by Country"
+      countries={dentalCountryLocations}
+    />
+    </>
   );
 }

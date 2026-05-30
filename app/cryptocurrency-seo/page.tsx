@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ServicePage from "@/components/ServicePage";
+import NicheLocationsSection from "@/components/NicheLocationsSection";
+import { cryptoCountryLocations } from "@/data/crypto-country-locations";
 
 export const metadata: Metadata = {
   title: "Cryptocurrency SEO Agency — Blockchain, DeFi & Crypto SEO Services",
@@ -64,6 +66,7 @@ const faqs = [
 
 export default function CryptocurrencySeoPage() {
   return (
+    <>
     <ServicePage
       label="Crypto SEO"
       title="Cryptocurrency SEO Agency"
@@ -112,5 +115,11 @@ export default function CryptocurrencySeoPage() {
         scaling to new markets, we can build the organic strategy to get you there.
       </p>
     </ServicePage>
+    <NicheLocationsSection
+      nicheSlug="cryptocurrency-seo"
+      heading="Crypto SEO by Country"
+      countries={cryptoCountryLocations}
+    />
+    </>
   );
 }

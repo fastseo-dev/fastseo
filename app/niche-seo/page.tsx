@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { igamingCountryLocations } from "@/data/igaming-country-locations";
+import { cryptoCountryLocations } from "@/data/crypto-country-locations";
+import { adultCountryLocations } from "@/data/adult-country-locations";
+import { dentalCountryLocations } from "@/data/dental-country-locations";
+import { saasCountryLocations } from "@/data/saas-country-locations";
+import { cannabisCountryLocations } from "@/data/cannabis-country-locations";
 
 export const metadata: Metadata = {
   title: "Niche SEO Services — Specialist SEO for Regulated & Competitive Industries",
@@ -191,6 +197,46 @@ export default function NicheSeoPage() {
                 <li>Dental group grew patient enquiries 180% across 6 locations</li>
               </ul>
             </div>
+          </div>
+        </section>
+
+        {/* Location hub */}
+        <section className="border-t border-border">
+          <div className="max-w-[1160px] mx-auto px-6 py-20">
+            <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
+              SEO by Country & Market
+            </h2>
+            <p className="font-body text-[15px] text-text-muted mb-14 max-w-[540px]">
+              Every market has its own search behaviour, regulations, and competitive landscape.
+              Select a country to see the specialist programme built for it.
+            </p>
+
+            {[
+              { label: "iGaming SEO", nicheSlug: "igaming-seo", countries: igamingCountryLocations },
+              { label: "Crypto SEO", nicheSlug: "cryptocurrency-seo", countries: cryptoCountryLocations },
+              { label: "Adult SEO", nicheSlug: "adult-seo", countries: adultCountryLocations },
+              { label: "Dental SEO", nicheSlug: "dental-seo", countries: dentalCountryLocations },
+              { label: "SaaS SEO", nicheSlug: "saas-seo", countries: saasCountryLocations },
+              { label: "Cannabis SEO", nicheSlug: "marijuana-seo", countries: cannabisCountryLocations },
+            ].map(({ label, nicheSlug, countries }) => (
+              <div key={nicheSlug} className="mb-12 last:mb-0">
+                <h3 className="font-display font-bold text-[17px] text-text-primary mb-4">{label}</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                  {countries.map((c) => (
+                    <Link
+                      key={c.countrySlug}
+                      href={`/${nicheSlug}/${c.countrySlug}/`}
+                      className="group rounded-xl border border-border bg-surface p-4 hover:border-lime/40 hover:bg-lime/[0.03] transition-all text-center"
+                    >
+                      <div className="text-[24px] mb-1.5">{c.countryFlag}</div>
+                      <div className="font-body text-[12px] font-semibold text-text-muted group-hover:text-text-primary transition-colors">
+                        {c.countryShort}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

@@ -26,9 +26,19 @@ const linkBuildingLinks = [
   { label: "Adult Link Building",    href: "/adult-linkbuilding/" },
 ];
 
+const locationLinks = [
+  { label: "iGaming SEO — UK",       href: "/igaming-seo/uk/" },
+  { label: "iGaming SEO — USA",      href: "/igaming-seo/usa/" },
+  { label: "Crypto SEO — UK",        href: "/cryptocurrency-seo/uk/" },
+  { label: "Adult SEO — UK",         href: "/adult-seo/uk/" },
+  { label: "SEO Services — London",  href: "/seo-services/uk/london/" },
+  { label: "All Locations",          href: "/niche-seo/" },
+];
+
 const topNavLinks = [
   { label: "Services",      href: "/niche-seo/",              dropdown: serviceLinks },
   { label: "Link Building", href: "/link-building-services/", dropdown: linkBuildingLinks },
+  { label: "Locations",     href: "/niche-seo/",              dropdown: locationLinks },
   { label: "AI Search",     href: "/ai-seo-services/",        dropdown: null },
   { label: "Pricing",       href: "/pricing/",                dropdown: null },
   { label: "Case Studies",  href: "/case-studies/",           dropdown: null },

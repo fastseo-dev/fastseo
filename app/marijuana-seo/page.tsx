@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ServicePage from "@/components/ServicePage";
+import NicheLocationsSection from "@/components/NicheLocationsSection";
+import { cannabisCountryLocations } from "@/data/cannabis-country-locations";
 
 export const metadata: Metadata = {
   title: "Cannabis SEO Agency — Marijuana, CBD & Dispensary SEO Services",
@@ -64,6 +66,7 @@ const faqs = [
 
 export default function MarijuanaSeoPage() {
   return (
+    <>
     <ServicePage
       label="Cannabis SEO"
       title="Cannabis & Marijuana SEO"
@@ -106,5 +109,11 @@ export default function MarijuanaSeoPage() {
         <li>Monthly performance reporting with clear ROI visibility</li>
       </ul>
     </ServicePage>
+    <NicheLocationsSection
+      nicheSlug="marijuana-seo"
+      heading="Cannabis SEO by Country"
+      countries={cannabisCountryLocations}
+    />
+    </>
   );
 }

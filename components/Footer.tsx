@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { LogoMark } from "./Logo";
-import { seoServicesLocations } from "@/data/seo-services-locations";
 
 /* ─── Data ───────────────────────────────────────────────────────────────── */
 
@@ -130,13 +129,12 @@ export default function Footer() {
           <div>
             <FooterHeading>Locations</FooterHeading>
             <ul className="flex flex-col gap-2.5">
-              {seoServicesLocations.map((loc) => (
-                <li key={loc.slug}>
-                  <FooterLink href={`/seo-services/${loc.slug}/`}>
-                    {loc.flag} {loc.shortName}
-                  </FooterLink>
-                </li>
-              ))}
+              <li><FooterLink href="/igaming-seo/uk/">iGaming SEO UK</FooterLink></li>
+              <li><FooterLink href="/igaming-seo/usa/">iGaming SEO USA</FooterLink></li>
+              <li><FooterLink href="/cryptocurrency-seo/uk/">Crypto SEO UK</FooterLink></li>
+              <li><FooterLink href="/seo-services/uk/london/">SEO Services London</FooterLink></li>
+              <li><FooterLink href="/seo-services/usa/new-york/">SEO Services New York</FooterLink></li>
+              <li><FooterLink href="/niche-seo/">View all locations →</FooterLink></li>
             </ul>
           </div>
 

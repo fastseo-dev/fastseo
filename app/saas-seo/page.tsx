@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ServicePage from "@/components/ServicePage";
+import NicheLocationsSection from "@/components/NicheLocationsSection";
+import { saasCountryLocations } from "@/data/saas-country-locations";
 
 export const metadata: Metadata = {
   title: "SaaS SEO Agency — SEO for Software & SaaS Companies",
@@ -64,6 +66,7 @@ const faqs = [
 
 export default function SaasSeoPage() {
   return (
+    <>
     <ServicePage
       label="SaaS SEO"
       title="SaaS SEO Agency"
@@ -106,5 +109,11 @@ export default function SaasSeoPage() {
         <li>Monthly reporting tied to trial signups, demos, MQLs, and pipeline</li>
       </ul>
     </ServicePage>
+    <NicheLocationsSection
+      nicheSlug="saas-seo"
+      heading="SaaS SEO by Country"
+      countries={saasCountryLocations}
+    />
+    </>
   );
 }
