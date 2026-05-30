@@ -126,4 +126,16 @@ export const nicheConfigs: Record<string, NicheConfig> = {
       { title: "Patient Acquisition SEO", desc: "Conversion-focused keyword strategy targeting high-value procedures — implants, orthodontics, and cosmetic dentistry — where patient lifetime value is highest." },
     ],
   },
+  "seo-services": {
+    label: "SEO Services",
+    parentHref: "/seo-services/",
+    services: [
+      { title: "Technical SEO", desc: "Full technical audits — crawl architecture, Core Web Vitals, canonicalisation, structured data, and indexation. We fix what silently prevents your site from ranking." },
+      { title: "Link Building", desc: "Manual editorial backlinks from niche-relevant publishers. Specialist adult, iGaming, and crypto publisher networks that generalist agencies cannot access." },
+      { title: "On-Page SEO", desc: "Keyword research, intent mapping, title tags, heading structure, internal linking, and schema markup — data-driven across every key page." },
+      { title: "Content SEO", desc: "E-E-A-T optimised articles, pillar pages, and service pages written by vertical specialists — not generalists producing generic copy that fails to rank." },
+      { title: "Local SEO", desc: "Google Business Profile optimisation, local citation building, local pack strategies, and location page development for businesses targeting specific markets." },
+      { title: "Restricted Niches", desc: "Adult SEO, iGaming SEO, crypto SEO, cannabis SEO — regulated verticals where mainstream agencies refuse to operate. Specialist compliance-aware strategy." },
+    ],
+  },
 };

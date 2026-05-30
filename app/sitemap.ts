@@ -17,6 +17,7 @@ import { adultCities } from "@/data/adult-cities";
 import { dentalCities } from "@/data/dental-cities";
 import { saasCities } from "@/data/saas-cities";
 import { cannabisCities } from "@/data/cannabis-cities";
+import { seoServicesCities } from "@/data/seo-services-cities";
 
 export const dynamic = "force-dynamic";
 
@@ -120,6 +121,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
+  const seoServicesCityEntries: MetadataRoute.Sitemap = seoServicesCities.map((c) => ({
+    url: `${BASE}/seo-services/${c.countrySlug}/${c.citySlug}/`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   const nicheCountryEntries: MetadataRoute.Sitemap = [
     ...igamingCountryLocations.map((loc) => ({
       url: `${BASE}/igaming-seo/${loc.countrySlug}/`,
@@ -209,6 +217,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...caseStudyEntries,
     ...authorEntries,
     ...locationEntries,
+    ...seoServicesCityEntries,
     ...nicheCountryEntries,
     ...nicheCityEntries,
     ...blogEntries,
