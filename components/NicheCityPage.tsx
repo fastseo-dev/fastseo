@@ -321,16 +321,14 @@ export default function NicheCityPage({ data, config, otherCities }: Props) {
               <h2 className="font-display font-black text-[24px] tracking-[-0.5px] text-text-primary mb-8">
                 {data.nicheLabel} in Other {data.countryName} Cities
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              <div className="flex flex-wrap gap-2">
                 {otherCities.map((c) => (
                   <Link
                     key={c.citySlug}
                     href={`/${c.nicheSlug}/${c.countrySlug}/${c.citySlug}/`}
-                    className="group rounded-xl border border-border bg-void p-4 hover:border-border-strong hover:bg-surface transition-all text-center"
+                    className="inline-flex items-center font-body text-[13px] text-text-muted border border-border rounded-lg px-3 py-1.5 bg-void hover:border-border-strong hover:text-text-primary transition-colors"
                   >
-                    <div className="font-display font-bold text-[13px] text-text-muted group-hover:text-text-primary transition-colors">
-                      {c.cityName}
-                    </div>
+                    {c.cityName}
                   </Link>
                 ))}
               </div>

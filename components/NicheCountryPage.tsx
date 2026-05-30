@@ -250,14 +250,18 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
                 We deliver {data.nicheLabel} programmes across all major {data.countryName} cities.
               </p>
               <div className="flex flex-wrap gap-2">
-                {data.cities.map((city) => (
-                  <span
-                    key={city}
-                    className="inline-flex items-center font-body text-[13px] text-text-muted border border-border rounded-lg px-3 py-1.5 bg-void"
-                  >
-                    {city}
-                  </span>
-                ))}
+                {data.cities.map((city) => {
+                  const slug = city.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+                  return (
+                    <Link
+                      key={city}
+                      href={`/${data.nicheSlug}/${data.countrySlug}/${slug}/`}
+                      className="inline-flex items-center font-body text-[13px] text-text-muted border border-border rounded-lg px-3 py-1.5 bg-void hover:border-border-strong hover:text-text-primary transition-colors"
+                    >
+                      {city}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </section>
