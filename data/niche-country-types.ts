@@ -27,6 +27,7 @@ export interface NicheCountryData {
   countryShort: string;
   countryFlag: string;
   cities: string[];
+  quickAnswer?: string;
   title: string;
   metaDescription: string;
   h1: string;

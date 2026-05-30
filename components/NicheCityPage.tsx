@@ -1,126 +1,42 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import {
-  seoServicesLocations,
-  getLocationBySlug,
-} from "@/data/seo-services-locations";
-
-export const dynamicParams = false;
+import type { NicheCityData } from "@/data/niche-city-types";
+import type { NicheConfig } from "@/data/niche-country-types";
 
 const BASE = "https://www.fastseosolutions.com";
 
 interface Props {
-  params: Promise<{ country: string }>;
+  data: NicheCityData;
+  config: NicheConfig;
+  otherCities: NicheCityData[];
 }
 
-export async function generateStaticParams() {
-  return seoServicesLocations.map((l) => ({ country: l.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { country } = await params;
-  const loc = getLocationBySlug(country);
-  if (!loc) return {};
-
-  const canonical = `${BASE}/seo-services/${loc.slug}/`;
-  return {
-    title: loc.title,
-    description: loc.metaDescription,
-    alternates: { canonical },
-    robots: { index: true, follow: true },
-    openGraph: {
-      title: loc.title,
-      description: loc.metaDescription,
-      url: canonical,
-      images: [{ url: `${BASE}/opengraph-image`, width: 1200, height: 630, alt: loc.title }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: loc.title,
-      description: loc.metaDescription,
-    },
-  };
-}
-
-const services = [
-  {
-    title: "Technical SEO",
-    desc: "Full technical audits — crawl architecture, Core Web Vitals, canonicalisation, structured data, and indexation. We fix what silently prevents your site from ranking.",
-  },
-  {
-    title: "Link Building",
-    desc: "Manual editorial backlinks from niche-relevant publishers. Specialist adult, iGaming, and crypto publisher networks that generalist agencies cannot access.",
-  },
-  {
-    title: "On-Page SEO",
-    desc: "Keyword research, intent mapping, title tags, heading structure, internal linking, and schema markup — data-driven across every key page.",
-  },
-  {
-    title: "Local SEO",
-    desc: "Google Business Profile optimisation, local citation building, local pack strategies, and location page development for businesses targeting specific markets.",
-  },
-  {
-    title: "Content SEO",
-    desc: "E-E-A-T optimised articles, pillar pages, and service pages written by vertical specialists — not generalists producing generic copy that fails to rank.",
-  },
-  {
-    title: "Restricted Niches",
-    desc: "Adult SEO, iGaming SEO, crypto SEO, cannabis SEO — regulated verticals where mainstream agencies refuse to operate. Specialist compliance-aware strategy.",
-  },
-];
-
-export default async function SeoServicesCountryPage({ params }: Props) {
-  const { country } = await params;
-  const loc = getLocationBySlug(country);
-  if (!loc) notFound();
-
-  const canonical = `${BASE}/seo-services/${loc.slug}/`;
+export default function NicheCityPage({ data, config, otherCities }: Props) {
+  const canonical = `${BASE}/${data.nicheSlug}/${data.countrySlug}/${data.citySlug}/`;
 
   const schemaService = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: `SEO Services — ${loc.name}`,
-    description: loc.metaDescription,
+    name: `${data.nicheLabel} — ${data.cityName}, ${data.countryName}`,
+    description: data.metaDescription,
     provider: {
       "@type": "Organization",
       name: "FastSEO Solutions",
       url: BASE,
       sameAs: ["https://www.fastseosolutions.com"],
     },
-    areaServed: { "@type": "Country", name: loc.name },
-    serviceType: "Search Engine Optimisation",
-    url: canonical,
-  };
-
-  const schemaSpeakable = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: loc.title,
-    url: canonical,
-    speakable: {
-      "@type": "SpeakableSpecification",
-      cssSelector: ["[data-speakable]"],
+    areaServed: {
+      "@type": "City",
+      name: data.cityName,
+      containedInPlace: { "@type": "Country", name: data.countryName },
     },
-  };
-
-  const schemaHowTo = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: `How FastSEO delivers SEO services in ${loc.name}`,
-    description: `Our specialist SEO process for ${loc.name} businesses in regulated and competitive niches.`,
-    step: services.map((s, i) => ({
-      "@type": "HowToStep",
-      position: i + 1,
-      name: s.title,
-      text: s.desc,
-    })),
+    serviceType: data.nicheLabel,
+    url: canonical,
   };
 
   const schemaFaq = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: loc.faqs.map((f) => ({
+    mainEntity: data.faqs.map((f) => ({
       "@type": "Question",
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -132,12 +48,53 @@ export default async function SeoServicesCountryPage({ params }: Props) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: BASE },
-      { "@type": "ListItem", position: 2, name: "SEO Services", item: `${BASE}/seo-services/` },
-      { "@type": "ListItem", position: 3, name: loc.name, item: canonical },
+      { "@type": "ListItem", position: 2, name: data.nicheLabel, item: `${BASE}/${data.nicheSlug}/` },
+      { "@type": "ListItem", position: 3, name: data.countryName, item: `${BASE}/${data.nicheSlug}/${data.countrySlug}/` },
+      { "@type": "ListItem", position: 4, name: data.cityName, item: canonical },
     ],
   };
 
-  const otherLocations = seoServicesLocations.filter((l) => l.slug !== loc.slug);
+  const schemaSpeakable = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: data.title,
+    url: canonical,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["[data-speakable]"],
+    },
+  };
+
+  const schemaHowTo = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How FastSEO delivers ${data.nicheLabel} in ${data.cityName}`,
+    description: `Our specialist ${data.nicheLabel} process for ${data.cityName} clients.`,
+    step: config.services.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.title,
+      text: s.desc,
+    })),
+  };
+
+  const schemaLocalBusiness = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: `FastSEO — ${data.nicheLabel} ${data.cityName}`,
+    description: data.metaDescription,
+    url: canonical,
+    areaServed: {
+      "@type": "City",
+      name: data.cityName,
+    },
+    serviceType: data.nicheLabel,
+    provider: {
+      "@type": "Organization",
+      name: "FastSEO Solutions",
+      url: BASE,
+    },
+  };
 
   return (
     <>
@@ -146,17 +103,20 @@ export default async function SeoServicesCountryPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaBreadcrumb) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaSpeakable) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaHowTo) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaLocalBusiness) }} />
 
       <div className="min-h-screen bg-void pt-[70px]">
 
         {/* ── Breadcrumb ── */}
         <div className="border-b border-border">
-          <div className="max-w-[1160px] mx-auto px-6 py-3 flex items-center gap-2 font-body text-[12px] text-text-faint">
+          <div className="max-w-[1160px] mx-auto px-6 py-3 flex items-center gap-2 font-body text-[12px] text-text-faint flex-wrap">
             <Link href="/" className="hover:text-text-muted transition-colors">Home</Link>
             <span>/</span>
-            <Link href="/seo-services/" className="hover:text-text-muted transition-colors">SEO Services</Link>
+            <Link href={config.parentHref} className="hover:text-text-muted transition-colors">{data.nicheLabel}</Link>
             <span>/</span>
-            <span className="text-text-muted">{loc.name}</span>
+            <Link href={`/${data.nicheSlug}/${data.countrySlug}/`} className="hover:text-text-muted transition-colors">{data.countryName}</Link>
+            <span>/</span>
+            <span className="text-text-muted">{data.cityName}</span>
           </div>
         </div>
 
@@ -166,13 +126,13 @@ export default async function SeoServicesCountryPage({ params }: Props) {
           <div className="max-w-[1160px] mx-auto px-6 py-24 lg:py-32">
             <span className="inline-flex items-center gap-2 text-lime font-body font-semibold text-[11px] tracking-[0.12em] uppercase mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
-              FastSEO · {loc.flag} {loc.shortName}
+              FastSEO · {data.countryFlag} {data.cityName} · {data.nicheLabel}
             </span>
             <h1 className="font-display font-black text-[48px] lg:text-[60px] leading-[1.02] tracking-[-2px] text-text-primary mb-6 max-w-[760px]">
-              {loc.h1}
+              {data.h1}
             </h1>
             <p className="font-body text-[17px] text-text-muted max-w-[600px] leading-relaxed mb-10" data-speakable>
-              {loc.subtitle}
+              {data.subtitle}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
@@ -194,15 +154,32 @@ export default async function SeoServicesCountryPage({ params }: Props) {
           </div>
         </section>
 
+        {/* ── Quick Answer — AI Overview & Voice Search ── */}
+        <section className="border-t border-border bg-lime/[0.04]">
+          <div className="max-w-[780px] mx-auto px-6 py-10">
+            <div className="flex items-start gap-4">
+              <div className="shrink-0 w-8 h-8 rounded-lg bg-lime/20 border border-lime/30 flex items-center justify-center mt-0.5">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 1v6M7 10v.5M2 7a5 5 0 1 0 10 0A5 5 0 0 0 2 7z" stroke="#E8FF47" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-body text-[11px] text-lime font-semibold tracking-wider uppercase mb-2">Quick Answer</p>
+                <p className="font-body text-[15px] text-text-secondary leading-relaxed" data-speakable>
+                  {data.quickAnswer}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── Stats ── */}
         <section className="border-t border-border bg-surface">
           <div className="max-w-[1160px] mx-auto px-6 py-12">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {loc.stats.map((s) => (
+              {data.stats.map((s) => (
                 <div key={s.label} className="text-center lg:text-left">
-                  <div className="font-display font-black text-[32px] lg:text-[36px] text-lime leading-none mb-1">
-                    {s.value}
-                  </div>
+                  <div className="font-display font-black text-[32px] lg:text-[36px] text-lime leading-none mb-1">{s.value}</div>
                   <div className="font-body text-[12px] text-text-muted">{s.label}</div>
                 </div>
               ))}
@@ -210,22 +187,20 @@ export default async function SeoServicesCountryPage({ params }: Props) {
           </div>
         </section>
 
-        {/* ── Services grid ── */}
+        {/* ── Services (HowTo steps) ── */}
         <section className="border-t border-border">
           <div className="max-w-[1160px] mx-auto px-6 py-20">
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
-              How We Deliver SEO in {loc.name}
+              How We Deliver {data.nicheLabel} in {data.cityName}
             </h2>
-            <p className="font-body text-[15px] text-text-muted mb-12 max-w-[500px]" data-speakable>
-              FastSEO is the specialist SEO agency for competitive and regulated niches in {loc.name} — delivering technical SEO, link building, and content that wins organic market share.
+            <p className="font-body text-[15px] text-text-muted mb-12 max-w-[500px]">
+              A specialist {data.nicheLabel} process built for the {data.cityName} market.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {services.map((s, i) => (
+              {config.services.map((s, i) => (
                 <div key={i} className="rounded-xl border border-border bg-surface p-6 hover:border-border-strong transition-colors">
                   <div className="w-8 h-8 rounded-lg bg-lime/10 border border-lime/20 flex items-center justify-center mb-4">
-                    <span className="font-display font-black text-[11px] text-lime">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
+                    <span className="font-display font-black text-[11px] text-lime">{String(i + 1).padStart(2, "0")}</span>
                   </div>
                   <h3 className="font-display font-bold text-[15px] text-text-primary mb-2">{s.title}</h3>
                   <p className="font-body text-[13px] text-text-muted leading-relaxed">{s.desc}</p>
@@ -235,17 +210,17 @@ export default async function SeoServicesCountryPage({ params }: Props) {
           </div>
         </section>
 
-        {/* ── Why FastSEO ── */}
+        {/* ── Why FastSEO for this city ── */}
         <section className="border-t border-border bg-surface">
           <div className="max-w-[1160px] mx-auto px-6 py-20">
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
-              Why FastSEO for {loc.name}?
+              Why FastSEO for {data.nicheLabel} in {data.cityName}?
             </h2>
-            <p className="font-body text-[15px] text-text-muted mb-10 max-w-[520px]">
-              Specialist knowledge that generalist agencies do not have — built into every {loc.shortName} engagement from day one.
+            <p className="font-body text-[15px] text-text-muted mb-10 max-w-[520px]" data-speakable>
+              FastSEO is the specialist {data.nicheLabel} agency for {data.cityName} — with city-specific market knowledge, regulatory expertise, and editorial publisher access.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {loc.whyUs.map((point, i) => (
+              {data.whyUs.map((point, i) => (
                 <div key={i} className="flex items-start gap-4 rounded-xl border border-border bg-void p-5">
                   <div className="shrink-0 w-6 h-6 rounded-full bg-lime/10 border border-lime/30 flex items-center justify-center mt-0.5">
                     <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
@@ -259,86 +234,74 @@ export default async function SeoServicesCountryPage({ params }: Props) {
           </div>
         </section>
 
-        {/* ── Market context ── */}
+        {/* ── City market context ── */}
         <section className="border-t border-border">
           <div className="max-w-[780px] mx-auto px-6 py-20">
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-6">
-              The {loc.name} SEO Market
+              {data.nicheLabel} in {data.cityName}: Market Overview
             </h2>
             <p className="font-body text-[15px] text-text-muted leading-relaxed mb-6" data-speakable>
-              {loc.marketContext}
+              {data.cityMarketContext}
             </p>
             <h3 className="font-display font-bold text-[20px] text-text-primary mb-4">
-              Regulatory &amp; Compliance Context
-            </h3>
-            <p className="font-body text-[15px] text-text-muted leading-relaxed mb-6">
-              {loc.regulatoryContext}
-            </p>
-            <h3 className="font-display font-bold text-[20px] text-text-primary mb-4">
-              Competitive Landscape
+              Competitive Landscape in {data.cityName}
             </h3>
             <p className="font-body text-[15px] text-text-muted leading-relaxed">
-              {loc.competitiveInsight}
+              {data.cityCompetitiveInsight}
             </p>
           </div>
         </section>
 
-        {/* ── Niche SEO Services ── */}
+        {/* ── Internal links ── */}
         <section className="border-t border-border bg-surface">
-          <div className="max-w-[1160px] mx-auto px-6 py-20">
-            <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
-              Niche SEO Services in {loc.name}
-            </h2>
-            <p className="font-body text-[15px] text-text-muted mb-12 max-w-[520px]">
-              Vertical-specific programmes for the regulated and competitive niches we serve in {loc.name}.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {loc.niches.map((niche) => (
-                <Link
-                  key={niche.href}
-                  href={niche.href}
-                  className="group rounded-xl border border-border bg-void p-6 hover:border-lime/40 hover:bg-lime/[0.03] transition-all"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-display font-bold text-[15px] text-text-primary group-hover:text-lime transition-colors">
-                      {niche.label}
-                    </span>
-                    <svg
-                      width="14" height="14" viewBox="0 0 14 14" fill="none"
-                      className="text-text-faint group-hover:text-lime transition-colors shrink-0"
-                    >
-                      <path d="M2.5 11.5l9-9M11.5 2.5H4.5M11.5 2.5v7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <p className="font-body text-[13px] text-text-muted leading-relaxed">
-                    {niche.desc}
-                  </p>
-                </Link>
-              ))}
+          <div className="max-w-[1160px] mx-auto px-6 py-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link
+                href={`/${data.nicheSlug}/${data.countrySlug}/`}
+                className="group rounded-xl border border-border bg-void p-5 hover:border-border-strong transition-all"
+              >
+                <p className="font-body text-[11px] text-text-faint uppercase tracking-wider mb-1">Broader coverage</p>
+                <h3 className="font-display font-bold text-[16px] text-text-primary group-hover:text-lime transition-colors">
+                  {data.nicheLabel} in {data.countryName}
+                </h3>
+                <p className="font-body text-[13px] text-text-muted mt-1">
+                  National {data.nicheLabel} strategy across the full {data.countryShort} market.
+                </p>
+              </Link>
+              <Link
+                href={`/seo-services/${data.countrySlug}/`}
+                className="group rounded-xl border border-border bg-void p-5 hover:border-border-strong transition-all"
+              >
+                <p className="font-body text-[11px] text-text-faint uppercase tracking-wider mb-1">All verticals</p>
+                <h3 className="font-display font-bold text-[16px] text-text-primary group-hover:text-lime transition-colors">
+                  Full SEO Services in {data.countryName}
+                </h3>
+                <p className="font-body text-[13px] text-text-muted mt-1">
+                  Technical SEO, link building, and content across all niches.
+                </p>
+              </Link>
             </div>
           </div>
         </section>
 
-        {/* ── FAQ ── */}
+        {/* ── FAQ — Voice & AI optimised ── */}
         <section className="border-t border-border">
           <div className="max-w-[780px] mx-auto px-6 py-20">
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
-              Frequently Asked Questions
+              {data.nicheLabel} in {data.cityName} — FAQs
             </h2>
             <p className="font-body text-[15px] text-text-muted mb-10">
-              Common questions about SEO services in {loc.name}.
+              Answers to the most common questions about {data.nicheLabel} in {data.cityName}.
             </p>
             <div className="flex flex-col divide-y divide-border">
-              {loc.faqs.map((faq, i) => (
+              {data.faqs.map((faq, i) => (
                 <details key={i} className="group py-1">
                   <summary className="flex items-center justify-between gap-4 py-4 cursor-pointer list-none">
                     <span className="font-display font-semibold text-[16px] text-text-primary group-open:text-lime transition-colors pr-4">
                       {faq.q}
                     </span>
-                    <svg
-                      width="18" height="18" viewBox="0 0 18 18" fill="none"
-                      className="shrink-0 text-text-muted transition-transform duration-200 group-open:rotate-180"
-                    >
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                      className="shrink-0 text-text-muted transition-transform duration-200 group-open:rotate-180">
                       <path d="M4 6.5l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </summary>
@@ -351,39 +314,39 @@ export default async function SeoServicesCountryPage({ params }: Props) {
           </div>
         </section>
 
-        {/* ── Other locations ── */}
-        <section className="border-t border-border bg-surface">
-          <div className="max-w-[1160px] mx-auto px-6 py-16">
-            <h2 className="font-display font-black text-[24px] tracking-[-0.5px] text-text-primary mb-8">
-              SEO Services in Other Markets
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-              {otherLocations.map((l) => (
-                <Link
-                  key={l.slug}
-                  href={`/seo-services/${l.slug}/`}
-                  className="group rounded-xl border border-border bg-void p-4 hover:border-border-strong hover:bg-surface transition-all text-center"
-                >
-                  <div className="text-[24px] mb-2">{l.flag}</div>
-                  <div className="font-body text-[13px] font-medium text-text-muted group-hover:text-text-primary transition-colors">
-                    {l.shortName}
-                  </div>
-                  <div className="font-body text-[11px] text-text-faint">{l.name}</div>
-                </Link>
-              ))}
+        {/* ── Other cities ── */}
+        {otherCities.length > 0 && (
+          <section className="border-t border-border bg-surface">
+            <div className="max-w-[1160px] mx-auto px-6 py-16">
+              <h2 className="font-display font-black text-[24px] tracking-[-0.5px] text-text-primary mb-8">
+                {data.nicheLabel} in Other {data.countryName} Cities
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                {otherCities.map((c) => (
+                  <Link
+                    key={c.citySlug}
+                    href={`/${c.nicheSlug}/${c.countrySlug}/${c.citySlug}/`}
+                    className="group rounded-xl border border-border bg-void p-4 hover:border-border-strong hover:bg-surface transition-all text-center"
+                  >
+                    <div className="font-display font-bold text-[13px] text-text-muted group-hover:text-text-primary transition-colors">
+                      {c.cityName}
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* ── CTA ── */}
         <section className="border-t border-border">
           <div className="max-w-[1160px] mx-auto px-6 py-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div>
               <h2 className="font-display font-black text-[28px] tracking-[-0.5px] text-text-primary mb-1">
-                Ready to rank in {loc.name}?
+                Ready to rank in {data.cityName}?
               </h2>
               <p className="font-body text-[14px] text-text-muted">
-                Free SEO audit — we will show you exactly where your organic growth opportunity is.
+                Free {data.nicheLabel} audit — we will show you exactly where your {data.cityName} organic growth opportunity is.
               </p>
             </div>
             <Link

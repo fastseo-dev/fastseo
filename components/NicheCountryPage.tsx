@@ -13,12 +13,18 @@ interface Props {
 export default function NicheCountryPage({ data, config, otherCountries }: Props) {
   const canonical = `${BASE}/${data.nicheSlug}/${data.countrySlug}/`;
 
+  /* ── JSON-LD schemas ── */
   const schemaService = {
     "@context": "https://schema.org",
     "@type": "Service",
     name: `${data.nicheLabel} — ${data.countryName}`,
     description: data.metaDescription,
-    provider: { "@type": "Organization", name: "FastSEO", url: BASE },
+    provider: {
+      "@type": "Organization",
+      name: "FastSEO Solutions",
+      url: BASE,
+      sameAs: ["https://www.fastseosolutions.com"],
+    },
     areaServed: { "@type": "Country", name: data.countryName },
     serviceType: data.nicheLabel,
     url: canonical,
@@ -44,6 +50,32 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
     ],
   };
 
+  /* Speakable — marks content AI/voice assistants should read aloud */
+  const schemaSpeakable = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: data.title,
+    url: canonical,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["[data-speakable]"],
+    },
+  };
+
+  /* HowTo — process-based content AI overviews extract */
+  const schemaHowTo = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How FastSEO delivers ${data.nicheLabel} in ${data.countryName}`,
+    description: `A step-by-step overview of our ${data.nicheLabel} process for ${data.countryName} clients.`,
+    step: config.services.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.title,
+      text: s.desc,
+    })),
+  };
+
   const generalCountryPage = seoServicesLocations.find((l) => l.slug === data.countrySlug);
 
   return (
@@ -51,6 +83,8 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaService) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaFaq) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaBreadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaSpeakable) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaHowTo) }} />
 
       <div className="min-h-screen bg-void pt-[70px]">
 
@@ -76,7 +110,7 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
             <h1 className="font-display font-black text-[48px] lg:text-[60px] leading-[1.02] tracking-[-2px] text-text-primary mb-6 max-w-[760px]">
               {data.h1}
             </h1>
-            <p className="font-body text-[17px] text-text-muted max-w-[600px] leading-relaxed mb-10">
+            <p className="font-body text-[17px] text-text-muted max-w-[600px] leading-relaxed mb-10" data-speakable>
               {data.subtitle}
             </p>
             <div className="flex flex-wrap gap-3">
@@ -99,6 +133,27 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
           </div>
         </section>
 
+        {/* ── Quick Answer — AI Overview & Voice Search target ── */}
+        {data.quickAnswer && (
+          <section className="border-t border-border bg-lime/[0.04]">
+            <div className="max-w-[780px] mx-auto px-6 py-10">
+              <div className="flex items-start gap-4">
+                <div className="shrink-0 w-8 h-8 rounded-lg bg-lime/20 border border-lime/30 flex items-center justify-center mt-0.5">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 1v6M7 10v.5M2 7a5 5 0 1 0 10 0A5 5 0 0 0 2 7z" stroke="#E8FF47" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-body text-[11px] text-lime font-semibold tracking-wider uppercase mb-2">Quick Answer</p>
+                  <p className="font-body text-[15px] text-text-secondary leading-relaxed" data-speakable>
+                    {data.quickAnswer}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* ── Stats ── */}
         <section className="border-t border-border bg-surface">
           <div className="max-w-[1160px] mx-auto px-6 py-12">
@@ -113,14 +168,14 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
           </div>
         </section>
 
-        {/* ── Services grid ── */}
+        {/* ── Services grid (HowTo steps) ── */}
         <section className="border-t border-border">
           <div className="max-w-[1160px] mx-auto px-6 py-20">
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
-              What We Do
+              How We Deliver {data.nicheLabel} in {data.countryName}
             </h2>
             <p className="font-body text-[15px] text-text-muted mb-12 max-w-[500px]">
-              Specialist {data.nicheLabel} services built for {data.countryName}.
+              A specialist {data.nicheLabel} process built specifically for the {data.countryName} market.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {config.services.map((s, i) => (
@@ -142,8 +197,8 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
               Why FastSEO for {data.nicheLabel} in {data.countryName}?
             </h2>
-            <p className="font-body text-[15px] text-text-muted mb-10 max-w-[520px]">
-              Specialist expertise that generalist agencies do not have — built into every {data.countryShort} {data.nicheLabel} engagement.
+            <p className="font-body text-[15px] text-text-muted mb-10 max-w-[520px]" data-speakable>
+              FastSEO is the specialist {data.nicheLabel} agency for {data.countryName} — with regulatory expertise, editorial publisher access, and a track record generalist agencies cannot match.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {data.whyUs.map((point, i) => (
@@ -164,13 +219,23 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
         <section className="border-t border-border">
           <div className="max-w-[780px] mx-auto px-6 py-20">
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-6">
-              {data.nicheLabel} in {data.countryName}
+              {data.nicheLabel} in {data.countryName}: Market Overview
             </h2>
-            <p className="font-body text-[15px] text-text-muted leading-relaxed mb-6">{data.marketContext}</p>
-            <h3 className="font-display font-bold text-[20px] text-text-primary mb-4">Regulatory &amp; Compliance Context</h3>
-            <p className="font-body text-[15px] text-text-muted leading-relaxed mb-6">{data.regulatoryContext}</p>
-            <h3 className="font-display font-bold text-[20px] text-text-primary mb-4">Competitive Landscape</h3>
-            <p className="font-body text-[15px] text-text-muted leading-relaxed">{data.competitiveInsight}</p>
+            <p className="font-body text-[15px] text-text-muted leading-relaxed mb-6" data-speakable>
+              {data.marketContext}
+            </p>
+            <h3 className="font-display font-bold text-[20px] text-text-primary mb-4">
+              Regulatory &amp; Compliance Context
+            </h3>
+            <p className="font-body text-[15px] text-text-muted leading-relaxed mb-6" data-speakable>
+              {data.regulatoryContext}
+            </p>
+            <h3 className="font-display font-bold text-[20px] text-text-primary mb-4">
+              Competitive Landscape
+            </h3>
+            <p className="font-body text-[15px] text-text-muted leading-relaxed">
+              {data.competitiveInsight}
+            </p>
           </div>
         </section>
 
@@ -182,7 +247,7 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
                 {data.nicheLabel} by City in {data.countryName}
               </h2>
               <p className="font-body text-[14px] text-text-muted mb-8">
-                We deliver {data.nicheLabel} programmes across all major {data.countryName} markets.
+                We deliver {data.nicheLabel} programmes across all major {data.countryName} cities.
               </p>
               <div className="flex flex-wrap gap-2">
                 {data.cities.map((city) => (
@@ -226,14 +291,14 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
           </section>
         )}
 
-        {/* ── FAQ ── */}
+        {/* ── FAQ — Voice Search & AI Overview optimised ── */}
         <section className="border-t border-border">
           <div className="max-w-[780px] mx-auto px-6 py-20">
             <h2 className="font-display font-black text-[32px] tracking-[-0.5px] text-text-primary mb-3">
-              Frequently Asked Questions
+              {data.nicheLabel} in {data.countryName} — FAQs
             </h2>
             <p className="font-body text-[15px] text-text-muted mb-10">
-              Common questions about {data.nicheLabel} in {data.countryName}.
+              Answers to the most common questions about {data.nicheLabel} in {data.countryName}.
             </p>
             <div className="flex flex-col divide-y divide-border">
               {data.faqs.map((faq, i) => (
@@ -247,7 +312,9 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
                       <path d="M4 6.5l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </summary>
-                  <p className="font-body text-[14px] text-text-muted leading-relaxed pb-5 pr-10">{faq.a}</p>
+                  <p className="font-body text-[14px] text-text-muted leading-relaxed pb-5 pr-10" data-speakable>
+                    {faq.a}
+                  </p>
                 </details>
               ))}
             </div>
