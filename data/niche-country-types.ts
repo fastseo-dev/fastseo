@@ -51,6 +51,17 @@ export const citiesByCountry: Record<string, string[]> = {
   ireland: ["Dublin", "Cork", "Limerick", "Galway", "Waterford"],
   uae: ["Dubai", "Abu Dhabi", "Sharjah"],
   singapore: [],
+  netherlands: ["Amsterdam"],
+  "czech-republic": ["Prague"],
+  spain: ["Barcelona"],
+  switzerland: ["Zurich"],
+  "hong-kong": ["Hong Kong"],
+  philippines: ["Manila"],
+  malaysia: ["Kuala Lumpur"],
+  thailand: ["Bangkok"],
+  france: [],
+  brazil: [],
+  mexico: [],
 };
 
 export const nicheConfigs: Record<string, NicheConfig> = {
