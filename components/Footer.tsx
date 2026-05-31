@@ -129,11 +129,15 @@ export default function Footer() {
           <div>
             <FooterHeading>Locations</FooterHeading>
             <ul className="flex flex-col gap-2.5">
-              <li><FooterLink href="/igaming-seo/uk/">iGaming SEO UK</FooterLink></li>
-              <li><FooterLink href="/igaming-seo/usa/">iGaming SEO USA</FooterLink></li>
-              <li><FooterLink href="/cryptocurrency-seo/uk/">Crypto SEO UK</FooterLink></li>
-              <li><FooterLink href="/seo-services/uk/london/">SEO Services London</FooterLink></li>
-              <li><FooterLink href="/seo-services/usa/new-york/">SEO Services New York</FooterLink></li>
+              <li><FooterLink href="/igaming-seo/uk/">iGaming SEO — UK</FooterLink></li>
+              <li><FooterLink href="/igaming-seo/malta/">iGaming SEO — Malta</FooterLink></li>
+              <li><FooterLink href="/igaming-seo/usa/">iGaming SEO — USA</FooterLink></li>
+              <li><FooterLink href="/cryptocurrency-seo/uk/">Crypto SEO — UK</FooterLink></li>
+              <li><FooterLink href="/cryptocurrency-seo/uae/">Crypto SEO — UAE</FooterLink></li>
+              <li><FooterLink href="/adult-seo/uk/">Adult SEO — UK</FooterLink></li>
+              <li><FooterLink href="/dental-seo/uae/">Dental SEO — UAE</FooterLink></li>
+              <li><FooterLink href="/saas-seo/usa/">SaaS SEO — USA</FooterLink></li>
+              <li><FooterLink href="/marijuana-seo/germany/">Cannabis SEO — Germany</FooterLink></li>
               <li><FooterLink href="/niche-seo/">View all locations →</FooterLink></li>
             </ul>
           </div>

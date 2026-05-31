@@ -28,10 +28,14 @@ const linkBuildingLinks = [
 
 const locationLinks = [
   { label: "iGaming SEO — UK",       href: "/igaming-seo/uk/" },
+  { label: "iGaming SEO — Malta",    href: "/igaming-seo/malta/" },
   { label: "iGaming SEO — USA",      href: "/igaming-seo/usa/" },
   { label: "Crypto SEO — UK",        href: "/cryptocurrency-seo/uk/" },
+  { label: "Crypto SEO — UAE",       href: "/cryptocurrency-seo/uae/" },
   { label: "Adult SEO — UK",         href: "/adult-seo/uk/" },
-  { label: "SEO Services — London",  href: "/seo-services/uk/london/" },
+  { label: "Dental SEO — UAE",       href: "/dental-seo/uae/" },
+  { label: "SaaS SEO — USA",         href: "/saas-seo/usa/" },
+  { label: "Cannabis SEO — Germany", href: "/marijuana-seo/germany/" },
   { label: "All Locations",          href: "/niche-seo/" },
 ];
 

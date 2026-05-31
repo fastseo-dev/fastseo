@@ -50,21 +50,13 @@ export const metadata: Metadata = {
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "FastSEO",
+  name: "FastSEO Solutions",
   url: "https://www.fastseosolutions.com",
-  logo: "https://www.fastseosolutions.com/logo.png",
-  foundingDate: "2018",
-  description: "Specialist SEO agency for iGaming, cryptocurrency, adult, cannabis, dental and SaaS industries.",
-  contactPoint: {
-    "@type": "ContactPoint",
-    email: "seo@fastseosolutions.com",
-    contactType: "customer service",
-    availableLanguage: "English",
-  },
-  sameAs: [
-    "https://www.linkedin.com/company/fastseosolutions",
-    "https://twitter.com/fastseosolutions",
-  ],
+  logo: "https://www.fastseosolutions.com/logo.svg",
+  description: "International SEO agency specialising in iGaming, Crypto, Adult, Dental, SaaS and Cannabis niches",
+  email: "seo@fastseosolutions.com",
+  areaServed: "Worldwide",
+  sameAs: [] as string[],
 };
 
 const websiteSchema = {
