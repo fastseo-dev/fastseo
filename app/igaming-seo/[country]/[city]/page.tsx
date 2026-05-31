@@ -3,6 +3,13 @@ import { notFound } from "next/navigation";
 import NicheCityPage from "@/components/NicheCityPage";
 import { igamingCitiesUsa } from "@/data/igaming-cities-usa";
 import { igamingCitiesUk } from "@/data/igaming-cities-uk";
+import { igamingCitiesAustralia } from "@/data/igaming-cities-australia";
+import { igamingCitiesCanada } from "@/data/igaming-cities-canada";
+import { igamingCitiesIndia } from "@/data/igaming-cities-india";
+import { igamingCitiesSingapore } from "@/data/igaming-cities-singapore";
+import { igamingCitiesGermany } from "@/data/igaming-cities-germany";
+import { igamingCitiesSouthAfrica } from "@/data/igaming-cities-south-africa";
+import { igamingCitiesIreland } from "@/data/igaming-cities-ireland";
 import { nicheConfigs } from "@/data/niche-country-types";
 import type { NicheCityData } from "@/data/niche-city-types";
 
@@ -14,6 +21,13 @@ const NICHE = "igaming-seo";
 const allCities: NicheCityData[] = [
   ...igamingCitiesUsa,
   ...igamingCitiesUk,
+  ...igamingCitiesAustralia,
+  ...igamingCitiesCanada,
+  ...igamingCitiesIndia,
+  ...igamingCitiesSingapore,
+  ...igamingCitiesGermany,
+  ...igamingCitiesSouthAfrica,
+  ...igamingCitiesIreland,
 ];
 
 function getCityData(country: string, city: string): NicheCityData | null {

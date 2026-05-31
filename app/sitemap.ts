@@ -12,6 +12,13 @@ import { saasCountryLocations } from "@/data/saas-country-locations";
 import { cannabisCountryLocations } from "@/data/cannabis-country-locations";
 import { igamingCitiesUk } from "@/data/igaming-cities-uk";
 import { igamingCitiesUsa } from "@/data/igaming-cities-usa";
+import { igamingCitiesAustralia } from "@/data/igaming-cities-australia";
+import { igamingCitiesCanada } from "@/data/igaming-cities-canada";
+import { igamingCitiesIndia } from "@/data/igaming-cities-india";
+import { igamingCitiesSingapore } from "@/data/igaming-cities-singapore";
+import { igamingCitiesGermany } from "@/data/igaming-cities-germany";
+import { igamingCitiesSouthAfrica } from "@/data/igaming-cities-south-africa";
+import { igamingCitiesIreland } from "@/data/igaming-cities-ireland";
 import { cryptoCities } from "@/data/crypto-cities";
 import { adultCities } from "@/data/adult-cities";
 import { dentalCities } from "@/data/dental-cities";
@@ -175,6 +182,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.75,
     })),
     ...igamingCitiesUsa.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...igamingCitiesAustralia.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...igamingCitiesCanada.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...igamingCitiesIndia.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...igamingCitiesSingapore.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...igamingCitiesGermany.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...igamingCitiesSouthAfrica.map((c) => ({
+      url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+    ...igamingCitiesIreland.map((c) => ({
       url: `${BASE}/igaming-seo/${c.countrySlug}/${c.citySlug}/`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,

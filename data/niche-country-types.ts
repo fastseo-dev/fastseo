@@ -50,7 +50,7 @@ export const citiesByCountry: Record<string, string[]> = {
   "south-africa": ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Port Elizabeth", "Bloemfontein"],
   ireland: ["Dublin", "Cork", "Limerick", "Galway", "Waterford"],
   uae: ["Dubai", "Abu Dhabi", "Sharjah"],
-  singapore: [],
+  singapore: ["Singapore"],
   netherlands: ["Amsterdam"],
   "czech-republic": ["Prague"],
   spain: ["Barcelona"],
