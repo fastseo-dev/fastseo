@@ -44,6 +44,7 @@ const staticRoutes: {
   { url: "/dental-seo/",                   priority: 0.9,  changeFrequency: "monthly" },
   { url: "/saas-seo/",                     priority: 0.9,  changeFrequency: "monthly" },
   { url: "/marijuana-seo/",                priority: 0.9,  changeFrequency: "monthly" },
+  { url: "/cannabis-seo/",                 priority: 0.9,  changeFrequency: "monthly" },
   { url: "/ai-seo-services/",              priority: 0.9,  changeFrequency: "monthly" },
   { url: "/strippers-seo/",                priority: 0.85, changeFrequency: "monthly" },
   { url: "/link-building-services/",       priority: 0.85, changeFrequency: "monthly" },

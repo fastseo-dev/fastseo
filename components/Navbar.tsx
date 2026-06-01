@@ -13,6 +13,7 @@ const serviceLinks = [
   { label: "Adult SEO",         href: "/adult-seo/" },
   { label: "Dental SEO",        href: "/dental-seo/" },
   { label: "Marijuana SEO",     href: "/marijuana-seo/" },
+  { label: "Cannabis SEO",      href: "/cannabis-seo/" },
   { label: "SaaS SEO",          href: "/saas-seo/" },
   { label: "AI SEO Services",   href: "/ai-seo-services/" },
   { label: "eCommerce SEO",     href: "/ecommerce-seo/" },
