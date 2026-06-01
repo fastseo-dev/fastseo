@@ -123,9 +123,11 @@ fastseo/
 │   │   ├── [country]/page.tsx              ← 9 country pages
 │   │   └── [country]/[city]/page.tsx       ← 10 UK cities + 10 USA cities
 │   ├── link-building-services/page.tsx
+│   ├── cannabis-seo/
+│   │   └── page.tsx                        ← Standalone page only — no country/city pages yet
 │   ├── marijuana-seo/
 │   │   ├── page.tsx
-│   │   ├── [country]/page.tsx              ← 2 country pages (usa, canada)
+│   │   ├── [country]/page.tsx              ← 10 country pages (usa, canada, uk, germany, netherlands, spain, australia, switzerland, mexico, czech-republic)
 │   │   └── [country]/[city]/page.tsx       ← 10 city pages
 │   ├── niche-seo/page.tsx
 │   ├── pricing/page.tsx
@@ -178,14 +180,14 @@ fastseo/
 │   ├── adult-country-locations.ts          ← 3 country entries
 │   ├── dental-country-locations.ts         ← 6 country entries
 │   ├── saas-country-locations.ts           ← 7 country entries
-│   ├── cannabis-country-locations.ts       ← 2 country entries
+│   ├── cannabis-country-locations.ts       ← 10 country entries (marijuana/dispensary keywords only — no "cannabis SEO" phrases)
 │   ├── igaming-cities-uk.ts               ← 10 UK city entries
 │   ├── igaming-cities-usa.ts              ← 10 USA city entries
 │   ├── crypto-cities.ts                   ← 10 global city entries
 │   ├── adult-cities.ts                    ← 10 global city entries
 │   ├── dental-cities.ts                   ← 10 global city entries
 │   ├── saas-cities.ts                     ← 10 global city entries
-│   ├── cannabis-cities.ts                 ← 10 global city entries
+│   ├── cannabis-cities.ts                 ← 10 global city entries (marijuana/dispensary keywords only)
 │   └── seo-services-locations.ts          ← 11 city/location entries
 │
 ├── lib/
@@ -384,9 +386,10 @@ Each niche has a `[country]/[city]/page.tsx` using `NicheCityPage` component and
 /saas-seo/                      SaaS SEO
 /saas-seo/[country]/            SaaS country (7+ countries)
 /saas-seo/[country]/[city]/     SaaS city (10 cities)
-/marijuana-seo/                 Cannabis SEO
-/marijuana-seo/[country]/       Cannabis country (2 countries)
-/marijuana-seo/[country]/[city]/ Cannabis city (10 cities)
+/marijuana-seo/                 Marijuana & Dispensary SEO (targets: marijuana SEO, dispensary SEO, weed SEO)
+/marijuana-seo/[country]/       Marijuana country (10 countries)
+/marijuana-seo/[country]/[city]/ Marijuana city (10 cities)
+/cannabis-seo/                  Cannabis Brand & CBD SEO (targets: cannabis SEO, CBD SEO, hemp SEO) — standalone only, no country/city pages yet
 /ai-seo-services/               AEO / AI Search Visibility
 /link-building-services/        Link Building
 /igaming-link-building/         iGaming Link Building
