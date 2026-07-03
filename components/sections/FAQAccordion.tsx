@@ -68,7 +68,7 @@ export default function FAQAccordion() {
                 </span>
               </summary>
               <div className="px-6 pb-5">
-                <p className="font-body text-[14px] text-text-muted leading-relaxed border-t border-border/50 pt-4">
+                <p className="font-body text-[14px] text-text-muted leading-relaxed border-t border-border/50 pt-4" data-speakable>
                   {faq.answer}
                 </p>
               </div>

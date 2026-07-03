@@ -40,10 +40,19 @@ export const metadata: Metadata = {
 const homepageSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
+  "@id": "https://www.fastseosolutions.com/#webpage",
   name: "FastSEO — Fast SEO Services for Adult, iGaming & Crypto",
   url: "https://www.fastseosolutions.com/",
   description:
     "Fast SEO services for adult websites, iGaming, cryptocurrency, cannabis, dental and SaaS brands.",
+  inLanguage: "en",
+  isPartOf: { "@type": "WebSite", "@id": "https://www.fastseosolutions.com/#website" },
+  about: { "@type": "Organization", "@id": "https://www.fastseosolutions.com/#organization" },
+  publisher: { "@type": "Organization", "@id": "https://www.fastseosolutions.com/#organization" },
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: ["[data-speakable]"],
+  },
   breadcrumb: {
     "@type": "BreadcrumbList",
     itemListElement: [
@@ -55,17 +64,75 @@ const homepageSchema = {
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": "https://www.fastseosolutions.com/#organization",
   name: "FastSEO",
   alternateName: "FastSEO Solutions",
   url: "https://www.fastseosolutions.com",
-  logo: "https://www.fastseosolutions.com/opengraph-image",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://www.fastseosolutions.com/opengraph-image",
+    width: 1200,
+    height: 630,
+  },
   description:
     "Specialist fast SEO services agency for adult websites, iGaming, cryptocurrency, cannabis, dental and SaaS. Fast SEO results for regulated and competitive niches.",
   email: "seo@fastseosolutions.com",
   areaServed: "Worldwide",
+  foundingDate: "2020",
+  knowsAbout: [
+    "Search Engine Optimisation",
+    "iGaming SEO",
+    "Cryptocurrency SEO",
+    "Adult SEO",
+    "Dental SEO",
+    "SaaS SEO",
+    "Cannabis SEO",
+    "Answer Engine Optimisation",
+    "AI Search Visibility",
+    "Link Building",
+    "Technical SEO",
+    "Voice Search Optimisation",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "seo@fastseosolutions.com",
+    contactType: "customer service",
+    availableLanguage: ["English"],
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "SEO Services by FastSEO",
+    itemListElement: [
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "iGaming SEO", url: "https://www.fastseosolutions.com/igaming-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Cryptocurrency SEO", url: "https://www.fastseosolutions.com/cryptocurrency-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Adult SEO", url: "https://www.fastseosolutions.com/adult-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Dental SEO", url: "https://www.fastseosolutions.com/dental-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "SaaS SEO", url: "https://www.fastseosolutions.com/saas-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Cannabis SEO", url: "https://www.fastseosolutions.com/cannabis-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI SEO & AEO Services", url: "https://www.fastseosolutions.com/ai-seo-services/" } },
+    ],
+  },
   sameAs: [
     "https://linkedin.com",
     "https://twitter.com",
+  ],
+};
+
+const serviceListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "FastSEO SEO Services",
+  description: "Specialist SEO services for iGaming, Crypto, Adult, Cannabis, Dental, SaaS, and AI search visibility.",
+  url: "https://www.fastseosolutions.com/",
+  numberOfItems: 7,
+  itemListElement: [
+    { "@type": "ListItem", position: 1, item: { "@type": "Service", name: "iGaming SEO", url: "https://www.fastseosolutions.com/igaming-seo/", description: "Specialist SEO for online casinos, sports betting, and poker platforms in regulated markets." } },
+    { "@type": "ListItem", position: 2, item: { "@type": "Service", name: "Cryptocurrency SEO", url: "https://www.fastseosolutions.com/cryptocurrency-seo/", description: "SEO for crypto exchanges, DeFi platforms, NFT projects, and Web3 brands." } },
+    { "@type": "ListItem", position: 3, item: { "@type": "Service", name: "Adult SEO", url: "https://www.fastseosolutions.com/adult-seo/", description: "SEO for adult content platforms, escort agencies, cam sites, and adult eCommerce." } },
+    { "@type": "ListItem", position: 4, item: { "@type": "Service", name: "Dental SEO", url: "https://www.fastseosolutions.com/dental-seo/", description: "Local SEO for multi-location dental practices and dental groups." } },
+    { "@type": "ListItem", position: 5, item: { "@type": "Service", name: "SaaS SEO", url: "https://www.fastseosolutions.com/saas-seo/", description: "Organic growth strategies for B2B and B2C SaaS platforms." } },
+    { "@type": "ListItem", position: 6, item: { "@type": "Service", name: "Cannabis SEO", url: "https://www.fastseosolutions.com/cannabis-seo/", description: "SEO for CBD eCommerce, cannabis dispensaries, and hemp wellness brands." } },
+    { "@type": "ListItem", position: 7, item: { "@type": "Service", name: "AI SEO & AEO Services", url: "https://www.fastseosolutions.com/ai-seo-services/", description: "Answer Engine Optimisation to get cited by ChatGPT, Gemini, Perplexity, and Claude." } },
   ],
 };
 
@@ -138,6 +205,10 @@ export default function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceListSchema) }}
       />
       <Hero />
       <StatsBar />

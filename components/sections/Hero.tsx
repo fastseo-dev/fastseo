@@ -68,7 +68,7 @@ export default function Hero() {
               </span>
             </h1>
 
-            <p className="font-body text-[17px] text-text-muted leading-relaxed max-w-[520px] mb-8">
+            <p className="font-body text-[17px] text-text-muted leading-relaxed max-w-[520px] mb-8" data-speakable>
               Fast SEO services for iGaming, Crypto, Adult &amp; SaaS.
               We rank brands most agencies won&apos;t touch — and get you recommended
               by ChatGPT, Gemini &amp; Perplexity.

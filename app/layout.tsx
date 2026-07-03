@@ -50,25 +50,101 @@ export const metadata: Metadata = {
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": "https://www.fastseosolutions.com/#organization",
   name: "FastSEO Solutions",
+  alternateName: "FastSEO",
   url: "https://www.fastseosolutions.com",
-  logo: "https://www.fastseosolutions.com/logo.svg",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://www.fastseosolutions.com/logo.svg",
+    width: 200,
+    height: 60,
+  },
+  image: "https://www.fastseosolutions.com/opengraph-image",
   description: "International SEO agency specialising in iGaming, Crypto, Adult, Dental, SaaS and Cannabis niches",
   email: "seo@fastseosolutions.com",
   areaServed: "Worldwide",
+  foundingDate: "2020",
+  knowsAbout: [
+    "Search Engine Optimisation",
+    "iGaming SEO",
+    "Cryptocurrency SEO",
+    "Adult SEO",
+    "Dental SEO",
+    "SaaS SEO",
+    "Cannabis SEO",
+    "Answer Engine Optimisation",
+    "AI Search Visibility",
+    "Link Building",
+    "Technical SEO",
+    "Voice Search Optimisation",
+    "Local SEO",
+    "Content Strategy",
+    "Topical Authority Building",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "seo@fastseosolutions.com",
+    contactType: "customer service",
+    availableLanguage: ["English"],
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "SEO Services by FastSEO",
+    itemListElement: [
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "iGaming SEO", url: "https://www.fastseosolutions.com/igaming-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Cryptocurrency SEO", url: "https://www.fastseosolutions.com/cryptocurrency-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Adult SEO", url: "https://www.fastseosolutions.com/adult-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Dental SEO", url: "https://www.fastseosolutions.com/dental-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "SaaS SEO", url: "https://www.fastseosolutions.com/saas-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Cannabis SEO", url: "https://www.fastseosolutions.com/cannabis-seo/" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI SEO & AEO Services", url: "https://www.fastseosolutions.com/ai-seo-services/" } },
+    ],
+  },
   sameAs: [] as string[],
 };
 
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": "https://www.fastseosolutions.com/#website",
   name: "FastSEO",
   url: "https://www.fastseosolutions.com",
   description: "Specialist SEO agency for iGaming, cryptocurrency, adult, cannabis, dental and SaaS industries.",
+  inLanguage: "en",
+  publisher: {
+    "@type": "Organization",
+    "@id": "https://www.fastseosolutions.com/#organization",
+  },
   potentialAction: {
     "@type": "SearchAction",
     target: { "@type": "EntryPoint", urlTemplate: "https://www.fastseosolutions.com/blog/?s={search_term_string}" },
     "query-input": "required name=search_term_string",
+  },
+};
+
+const professionalServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://www.fastseosolutions.com/#professionalservice",
+  name: "FastSEO Solutions",
+  url: "https://www.fastseosolutions.com",
+  description: "International SEO agency specialising in iGaming, Crypto, Adult, Dental, SaaS and Cannabis niches. Expert Answer Engine Optimisation for ChatGPT, Gemini, Perplexity, and voice search visibility.",
+  email: "seo@fastseosolutions.com",
+  areaServed: "Worldwide",
+  serviceType: [
+    "Search Engine Optimisation",
+    "Answer Engine Optimisation",
+    "Link Building",
+    "Technical SEO",
+    "Content Strategy",
+    "Voice Search Optimisation",
+    "AI Search Visibility",
+    "Local SEO",
+  ],
+  provider: {
+    "@type": "Organization",
+    "@id": "https://www.fastseosolutions.com/#organization",
   },
 };
 
@@ -145,6 +221,7 @@ gtag('config','${gaId}');
 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }} />
 
         <PublicLayout>{children}</PublicLayout>
 

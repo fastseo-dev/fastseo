@@ -40,15 +40,49 @@ export default function ServicePage({
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
+    "@id": `${siteUrl}${canonicalPath}#service`,
     name: serviceName,
     description: serviceDescription,
     provider: {
       "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
       name: "FastSEO",
       url: siteUrl,
     },
     areaServed: "Worldwide",
     url: `${siteUrl}${canonicalPath}`,
+    serviceType: "SEO",
+    category: "Digital Marketing",
+  };
+
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${siteUrl}${canonicalPath}#webpage`,
+    name: serviceName,
+    url: `${siteUrl}${canonicalPath}`,
+    description: serviceDescription,
+    inLanguage: "en",
+    isPartOf: { "@type": "WebSite", "@id": `${siteUrl}/#website` },
+    about: { "@type": "Service", "@id": `${siteUrl}${canonicalPath}#service` },
+    publisher: { "@type": "Organization", "@id": `${siteUrl}/#organization` },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["[data-speakable]"],
+    },
+  };
+
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How FastSEO delivers ${serviceName}`,
+    description: serviceDescription,
+    step: features.map((f, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: f.title,
+      text: f.desc,
+    })),
   };
 
   const faqSchema = faqs && faqs.length > 0
@@ -81,6 +115,14 @@ export default function ServicePage({
       />
       <script
         type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       {faqSchema && (
@@ -103,7 +145,7 @@ export default function ServicePage({
             <h1 className="font-display font-black text-[52px] lg:text-[64px] leading-[1.02] tracking-[-2px] text-text-primary mb-6 max-w-[700px]">
               {title}
             </h1>
-            <p className="font-body text-[17px] text-text-muted max-w-[580px] leading-relaxed mb-10">
+            <p className="font-body text-[17px] text-text-muted max-w-[580px] leading-relaxed mb-10" data-speakable>
               {subtitle}
             </p>
             <div className="flex flex-wrap gap-3">
@@ -191,7 +233,7 @@ export default function ServicePage({
                         <path d="M4 6.5l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </summary>
-                    <p className="font-body text-[14px] text-text-muted leading-relaxed pb-5 pr-10">
+                    <p className="font-body text-[14px] text-text-muted leading-relaxed pb-5 pr-10" data-speakable>
                       {faq.a}
                     </p>
                   </details>

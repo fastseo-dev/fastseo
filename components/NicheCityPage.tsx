@@ -16,13 +16,14 @@ export default function NicheCityPage({ data, config, otherCities }: Props) {
   const schemaService = {
     "@context": "https://schema.org",
     "@type": "Service",
+    "@id": `${canonical}#service`,
     name: `${data.nicheLabel} — ${data.cityName}, ${data.countryName}`,
     description: data.metaDescription,
     provider: {
       "@type": "Organization",
+      "@id": `${BASE}/#organization`,
       name: "FastSEO Solutions",
       url: BASE,
-      sameAs: ["https://www.fastseosolutions.com"],
     },
     areaServed: {
       "@type": "City",
@@ -57,8 +58,13 @@ export default function NicheCityPage({ data, config, otherCities }: Props) {
   const schemaSpeakable = {
     "@context": "https://schema.org",
     "@type": "WebPage",
+    "@id": `${canonical}#webpage`,
     name: data.title,
     url: canonical,
+    inLanguage: "en",
+    isPartOf: { "@type": "WebSite", "@id": `${BASE}/#website` },
+    about: { "@type": "Service", "@id": `${canonical}#service` },
+    publisher: { "@type": "Organization", "@id": `${BASE}/#organization` },
     speakable: {
       "@type": "SpeakableSpecification",
       cssSelector: ["[data-speakable]"],
@@ -81,6 +87,7 @@ export default function NicheCityPage({ data, config, otherCities }: Props) {
   const schemaLocalBusiness = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
+    "@id": `${canonical}#localservice`,
     name: `FastSEO — ${data.nicheLabel} ${data.cityName}`,
     description: data.metaDescription,
     url: canonical,
@@ -91,6 +98,7 @@ export default function NicheCityPage({ data, config, otherCities }: Props) {
     serviceType: data.nicheLabel,
     provider: {
       "@type": "Organization",
+      "@id": `${BASE}/#organization`,
       name: "FastSEO Solutions",
       url: BASE,
     },

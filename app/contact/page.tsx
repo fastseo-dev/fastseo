@@ -11,14 +11,45 @@ export const metadata: Metadata = {
 const contactSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
-  name: "Contact FastSEO",
+  "@id": "https://www.fastseosolutions.com/contact/#webpage",
+  name: "Contact FastSEO — Get a Free SEO Audit",
   url: "https://www.fastseosolutions.com/contact/",
+  inLanguage: "en",
+  isPartOf: { "@type": "WebSite", "@id": "https://www.fastseosolutions.com/#website" },
+  publisher: { "@type": "Organization", "@id": "https://www.fastseosolutions.com/#organization" },
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: ["[data-speakable]"],
+  },
   mainEntity: {
     "@type": "Organization",
+    "@id": "https://www.fastseosolutions.com/#organization",
     name: "FastSEO",
     email: "seo@fastseosolutions.com",
     url: "https://www.fastseosolutions.com",
   },
+};
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Get Started with FastSEO",
+  description: "The four-step process for getting a free SEO audit and starting an SEO engagement with FastSEO Solutions.",
+  step: [
+    { "@type": "HowToStep", position: 1, name: "Free SEO Audit", text: "We review your site and niche — identifying the biggest ranking opportunities and any critical issues holding you back." },
+    { "@type": "HowToStep", position: 2, name: "Strategy Call", text: "A focused 30-minute call to walk through our findings and propose a tailored plan for your specific vertical and goals." },
+    { "@type": "HowToStep", position: 3, name: "Custom Proposal", text: "A clear, no-fluff proposal with scope, timeline, and pricing based on your actual situation — not a generic package." },
+    { "@type": "HowToStep", position: 4, name: "Execution", text: "We get to work. Monthly reports keep you informed of every action taken and every metric moved." },
+  ],
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.fastseosolutions.com/" },
+    { "@type": "ListItem", position: 2, name: "Contact", item: "https://www.fastseosolutions.com/contact/" },
+  ],
 };
 
 const whatToExpect = [
@@ -51,6 +82,14 @@ export default function ContactPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <div className="min-h-screen bg-void pt-[70px]">
         {/* Hero */}
@@ -64,7 +103,7 @@ export default function ContactPage() {
             <h1 className="font-display font-black text-[52px] lg:text-[64px] leading-[1.02] tracking-[-2px] text-text-primary mb-6 max-w-[700px]">
               Get a Free SEO Audit
             </h1>
-            <p className="font-body text-[17px] text-text-muted max-w-[540px] leading-relaxed mb-10">
+            <p className="font-body text-[17px] text-text-muted max-w-[540px] leading-relaxed mb-10" data-speakable>
               Tell us about your brand and niche. We will review your site and come back with
               a clear picture of your ranking opportunities — at no cost and with no obligation.
             </p>

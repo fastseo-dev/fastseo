@@ -17,13 +17,14 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
   const schemaService = {
     "@context": "https://schema.org",
     "@type": "Service",
+    "@id": `${canonical}#service`,
     name: `${data.nicheLabel} — ${data.countryName}`,
     description: data.metaDescription,
     provider: {
       "@type": "Organization",
+      "@id": `${BASE}/#organization`,
       name: "FastSEO Solutions",
       url: BASE,
-      sameAs: ["https://www.fastseosolutions.com"],
     },
     areaServed: { "@type": "Country", name: data.countryName },
     serviceType: data.nicheLabel,
@@ -54,8 +55,13 @@ export default function NicheCountryPage({ data, config, otherCountries }: Props
   const schemaSpeakable = {
     "@context": "https://schema.org",
     "@type": "WebPage",
+    "@id": `${canonical}#webpage`,
     name: data.title,
     url: canonical,
+    inLanguage: "en",
+    isPartOf: { "@type": "WebSite", "@id": `${BASE}/#website` },
+    about: { "@type": "Service", "@id": `${canonical}#service` },
+    publisher: { "@type": "Organization", "@id": `${BASE}/#organization` },
     speakable: {
       "@type": "SpeakableSpecification",
       cssSelector: ["[data-speakable]"],

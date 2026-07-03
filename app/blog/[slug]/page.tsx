@@ -95,21 +95,51 @@ function buildSchema(post: SupabasePost) {
   const authorSchema = authorData
     ? buildPersonSchema(authorData)
     : { "@type": "Person", name: post.author };
+  const pageUrl = post.canonical_url || `https://www.fastseosolutions.com/blog/${post.slug}/`;
+  const categories: string[] = Array.isArray(post.categories) ? post.categories : [];
   return {
     "@context": "https://schema.org",
     "@type": post.schema_type,
+    "@id": `${pageUrl}#article`,
     headline: post.title,
     description: post.meta_description || post.excerpt || undefined,
     author: authorSchema,
     datePublished: post.date,
     dateModified: post.date,
-    url: post.canonical_url || `https://www.fastseosolutions.com/blog/${post.slug}/`,
+    url: pageUrl,
     image: post.og_image || post.featured_image_url || undefined,
+    inLanguage: "en",
+    keywords: categories.length > 0 ? categories.join(", ") : undefined,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": pageUrl,
+    },
+    isPartOf: {
+      "@type": "WebSite",
+      "@id": "https://www.fastseosolutions.com/#website",
+    },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", "h2", "[data-speakable]"],
+    },
     publisher: {
       "@type": "Organization",
+      "@id": "https://www.fastseosolutions.com/#organization",
       name: "FastSEO",
       url: "https://www.fastseosolutions.com",
     },
+  };
+}
+
+function buildBreadcrumb(slug: string, title: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.fastseosolutions.com/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.fastseosolutions.com/blog/" },
+      { "@type": "ListItem", position: 3, name: title, item: `https://www.fastseosolutions.com/blog/${slug}/` },
+    ],
   };
 }
 
@@ -120,6 +150,7 @@ export default async function BlogPostPage({ params }: Props) {
   const dbPost = await getSupabasePost(slug);
   if (dbPost) {
     const schema = buildSchema(dbPost);
+    const breadcrumb = buildBreadcrumb(dbPost.slug, dbPost.title);
     const categories: string[] = Array.isArray(dbPost.categories) ? dbPost.categories : [];
     return (
       <div className="min-h-screen bg-void pt-[70px]">
@@ -129,6 +160,10 @@ export default async function BlogPostPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
           />
         )}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+        />
         <article className="max-w-[780px] mx-auto px-6 py-16">
           <Link href="/blog/" className="inline-flex items-center gap-1.5 font-body text-[13px] text-text-muted hover:text-text-primary transition-colors mb-10">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -196,8 +231,14 @@ export default async function BlogPostPage({ params }: Props) {
   const mdxPost = await getPost(slug);
   if (!mdxPost) notFound();
 
+  const mdxBreadcrumb = buildBreadcrumb(slug, mdxPost.title);
+
   return (
     <div className="min-h-screen bg-void pt-[70px]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(mdxBreadcrumb) }}
+      />
       <article className="max-w-[780px] mx-auto px-6 py-16">
         <Link href="/blog/" className="inline-flex items-center gap-1.5 font-body text-[13px] text-text-muted hover:text-text-primary transition-colors mb-10">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
